@@ -3,20 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>inftools — ferramentas para criadores</title>
+<title>inftools</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg:       #09090b;
-    --bg2:      #18181b;
-    --border:   #27272a;
-    --muted:    #52525b;
-    --text:     #fafafa;
-    --sub:      #a1a1aa;
-    --accent:   #a855f7;
-    --accent-d: #7e22ce;
+    --bg:       #080e0a;
+    --bg2:      #0f1a12;
+    --border:   #1a2e1e;
+    --muted:    #3d6b47;
+    --text:     #e8f5eb;
+    --sub:      #7ab588;
+    --accent:   #22c55e;
+    --accent-d: #15803d;
   }
 
   html, body {
@@ -33,7 +33,7 @@
     min-height: 100vh;
   }
 
-  /* ── NAV ── */
+  /* NAV */
   nav {
     display: flex;
     align-items: center;
@@ -63,48 +63,22 @@
     padding: 3px 10px;
   }
 
-  /* ── HERO ── */
+  /* HERO */
   .hero {
     text-align: center;
     padding: 80px 40px 60px;
     flex-shrink: 0;
   }
 
-  .hero-eyebrow {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 20px;
-  }
-
   .hero h1 {
-    font-size: clamp(36px, 6vw, 72px);
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    line-height: 1.05;
-    margin-bottom: 20px;
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    color: var(--accent);
   }
 
-  .hero h1 em {
-    font-style: normal;
-    background: linear-gradient(135deg, var(--accent), #ec4899);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  .hero p {
-    font-size: 16px;
-    color: var(--sub);
-    max-width: 500px;
-    margin: 0 auto;
-    line-height: 1.7;
-  }
-
-  /* ── TOOLS GRID ── */
+  /* TOOLS GRID */
   .tools-section {
     flex: 1;
     padding: 0 40px 80px;
@@ -113,22 +87,13 @@
     width: 100%;
   }
 
-  .section-label {
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 24px;
-  }
-
   .tools-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 16px;
   }
 
-  /* ── CARD ── */
+  /* CARD */
   .card {
     position: relative;
     display: flex;
@@ -149,7 +114,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 60% 0%, rgba(168,85,247,.08) 0%, transparent 70%);
+    background: radial-gradient(circle at 60% 0%, rgba(34,197,94,.07) 0%, transparent 70%);
     opacity: 0;
     transition: opacity 0.2s;
     pointer-events: none;
@@ -158,15 +123,10 @@
   .card:hover {
     border-color: var(--accent);
     transform: translateY(-3px);
-    box-shadow: 0 12px 40px rgba(168,85,247,.15);
+    box-shadow: 0 12px 40px rgba(34,197,94,.12);
   }
 
   .card:hover::before { opacity: 1; }
-
-  .card-icon {
-    font-size: 32px;
-    line-height: 1;
-  }
 
   .card-name {
     font-size: 16px;
@@ -194,7 +154,7 @@
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--muted);
-    background: #1f1f23;
+    background: #0d1a10;
     border: 1px solid var(--border);
     border-radius: 99px;
     padding: 3px 10px;
@@ -213,23 +173,18 @@
 
   /* Coming soon card */
   .card.soon {
-    opacity: 0.45;
+    opacity: 0.4;
     cursor: default;
     pointer-events: none;
   }
 
-  .card.soon .card-tag {
-    color: var(--muted);
-    background: transparent;
-  }
-
-  /* ── PRIVACY STRIP ── */
+  /* PRIVACY STRIP */
   .privacy-strip {
     margin: 0 40px 40px;
     max-width: 1100px;
     margin-left: auto;
     margin-right: auto;
-    background: #0f0f12;
+    background: #0a1209;
     border: 1px solid var(--border);
     border-radius: 14px;
     padding: 16px 24px;
@@ -241,11 +196,9 @@
     line-height: 1.5;
   }
 
-  .privacy-strip .pi { font-size: 18px; flex-shrink: 0; }
-
   .privacy-strip strong { color: var(--sub); font-weight: 600; }
 
-  /* ── FOOTER ── */
+  /* FOOTER */
   footer {
     border-top: 1px solid var(--border);
     padding: 24px 40px;
@@ -270,17 +223,13 @@
 </nav>
 
 <section class="hero">
-  <div class="hero-eyebrow">Seu kit de ferramentas</div>
-  <h1>Feito para<br><em>criadores</em></h1>
-  <p>Ferramentas práticas para o dia a dia de influencers e criadores de conteúdo. Tudo roda direto no navegador — sem servidor, sem cadastro, sem vazamento de dados.</p>
+  <h1>Seu kit de ferramentas</h1>
 </section>
 
 <main class="tools-section">
-  <div class="section-label">Ferramentas disponíveis</div>
   <div class="tools-grid">
 
     <a class="card" href="thumbnail_maker.html">
-      <div class="card-icon">🖼️</div>
       <div class="card-name">Thumbnail Maker</div>
       <div class="card-desc">Crie thumbnails para YouTube, Instagram, TikTok e mais — em múltiplos formatos de uma vez só.</div>
       <div class="card-footer">
@@ -290,7 +239,6 @@
     </a>
 
     <div class="card soon">
-      <div class="card-icon">✂️</div>
       <div class="card-name">Em breve</div>
       <div class="card-desc">Mais ferramentas chegando. Se tiver sugestão, abre uma issue no repositório.</div>
       <div class="card-footer">
@@ -302,7 +250,6 @@
 </main>
 
 <div class="privacy-strip">
-  <span class="pi">🔒</span>
   <span><strong>Privacidade por design.</strong> Nenhuma imagem, texto ou dado seu sai do seu navegador. Tudo é processado localmente — sem upload, sem analytics, sem cookies de terceiros.</span>
 </div>
 
