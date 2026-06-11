@@ -35,13 +35,41 @@ Dependências atuais e justificativa:
 
 ## Estrutura do projeto
 
-O projeto vive em uma única pasta na raiz do repositório, sem build step. Isso é intencional:
+O projeto vive na raiz do repositório, sem build step. Isso é intencional:
 
 - Qualquer pessoa pode clonar e abrir `index.html` sem instalar nada.
 - GitHub Pages funciona direto da raiz sem configuração de pasta de build.
-- Ferramentas novas são arquivos HTML independentes linkados pelo hub.
 
-Cada ferramenta é um HTML autocontido (ou um HTML + CSS + JS separados quando o arquivo crescer demais). Não há framework, não há bundler, não há processo de build. Isso reduz a barreira de entrada e elimina uma classe inteira de problemas de dependência.
+```
+inftools/
+├── index.html               ← hub principal
+├── diretivas.md
+└── tools/
+    ├── thumbnail-maker/     ← cada ferramenta em sua própria pasta
+    │   ├── index.html       ← entry point da ferramenta (GitHub Pages resolve /tools/thumbnail-maker/)
+    │   ├── thumbnail_maker.css
+    │   └── js/
+    │       └── tm-*.js
+    ├── yt-scheduler/        ← ferramentas que chamam APIs externas indicam isso
+    │   ├── index.html       ← envia vídeos para YouTube Data API via OAuth do usuário
+    │   ├── style.css
+    │   └── js/
+    │       ├── auth.js      ← OAuth via Google Identity Services (só client_id)
+    │       ├── scheduler.js ← cálculo de timestamps
+    │       ├── uploader.js  ← upload resumível direto ao YouTube
+    │       └── main.js
+    └── nova-ferramenta/     ← próximas ferramentas seguem o mesmo padrão
+        └── index.html
+```
+
+**Regras de organização:**
+
+- Cada ferramenta vive em `tools/<nome-da-ferramenta>/`.
+- Ferramentas que enviam dados para APIs externas (ex: YouTube, TikTok) devem indicar isso claramente na UI antes do uso — o usuário precisa saber que aquela ferramenta específica envia dados para fora do navegador.
+- O entry point é sempre `index.html` dentro da pasta — isso permite links limpos no GitHub Pages (`/tools/thumbnail-maker/` sem extensão).
+- CSS e JS próprios da ferramenta ficam dentro da mesma pasta (subpastas `js/`, `css/` se necessário).
+- Nada de arquivos soltos na raiz além do `index.html` do hub e arquivos de configuração do projeto.
+- O card no hub aponta para `tools/<nome>/` (com barra final).
 
 ---
 

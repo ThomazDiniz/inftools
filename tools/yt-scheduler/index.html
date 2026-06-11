@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube Scheduler — inftools</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<!-- Google Identity Services — só precisa do client_id, sem client_secret -->
+<script src="https://accounts.google.com/gsi/client" async></script>
+</head>
+<body>
+
+<nav>
+  <a class="back-link" href="../../">← inftools</a>
+  <span class="nav-title">YouTube Scheduler</span>
+  <div class="nav-right">
+    <div class="auth-info">
+      <span class="auth-dot" id="auth-dot"></span>
+      <span id="auth-name">Desconectado</span>
+    </div>
+    <button id="btn-connect" class="btn btn-primary btn-sm">Conectar</button>
+  </div>
+</nav>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+
+    <!-- OAuth -->
+    <div class="section">
+      <div class="section-title-row">
+        <span class="section-title">Conexão</span>
+        <button class="help-btn" id="btn-help" title="Como configurar">?</button>
+      </div>
+
+      <label class="field-label" for="client-id-input">Client ID</label>
+      <input
+        id="client-id-input"
+        type="text"
+        class="field-input"
+        placeholder="xxx.apps.googleusercontent.com"
+        autocomplete="off"
+        spellcheck="false"
+      >
+    </div>
+
+    <!-- Agendamento -->
+    <div class="section">
+      <div class="section-title">Agendamento</div>
+
+      <label class="field-label" for="start-date">Data de início</label>
+      <input id="start-date" type="date" class="field-input">
+
+      <label class="field-label">Horários por dia</label>
+      <div id="slots-tags" class="slots-tags"></div>
+      <div class="slot-add-row">
+        <input
+          id="slot-input"
+          type="number"
+          class="field-input-sm"
+          min="0" max="23"
+          placeholder="hora"
+        >
+        <button id="btn-add-slot" class="btn btn-ghost btn-sm">Adicionar</button>
+      </div>
+      <p class="field-hint">Ex: 8 e 18 = 2 vídeos por dia, às 8h e 18h.</p>
+
+      <label class="field-label" for="timezone-select">Fuso horário</label>
+      <select id="timezone-select" class="field-input">
+        <option value="America/Sao_Paulo">America/Sao_Paulo (BRT)</option>
+        <option value="America/New_York">America/New_York (ET)</option>
+        <option value="America/Los_Angeles">America/Los_Angeles (PT)</option>
+        <option value="America/Chicago">America/Chicago (CT)</option>
+        <option value="Europe/London">Europe/London (GMT)</option>
+        <option value="Europe/Lisbon">Europe/Lisbon (WET)</option>
+        <option value="Europe/Madrid">Europe/Madrid (CET)</option>
+        <option value="UTC">UTC</option>
+      </select>
+    </div>
+
+    <!-- Metadados -->
+    <div class="section">
+      <div class="section-title">Metadados</div>
+
+      <label class="field-label" for="category-select">Categoria</label>
+      <select id="category-select" class="field-input">
+        <option value="20">Gaming</option>
+        <option value="22">People &amp; Blogs</option>
+        <option value="24">Entertainment</option>
+        <option value="28">Science &amp; Technology</option>
+        <option value="10">Music</option>
+        <option value="17">Sports</option>
+        <option value="27">Education</option>
+        <option value="26">Howto &amp; Style</option>
+        <option value="25">News &amp; Politics</option>
+        <option value="23">Comedy</option>
+      </select>
+
+      <label class="field-label" for="description-input">Descrição padrão</label>
+      <textarea
+        id="description-input"
+        class="field-textarea"
+        rows="4"
+        placeholder="Descrição aplicada a todos os vídeos..."
+      ></textarea>
+      <p class="field-hint">Cada título é editável individualmente na fila.</p>
+    </div>
+
+  </aside>
+
+  <!-- ── CONTENT ── -->
+  <main class="content">
+
+    <!-- Estado vazio: drop zone -->
+    <div id="view-empty" class="view-empty">
+      <div id="drop-zone" class="drop-zone">
+        <div class="drop-icon">+</div>
+        <div class="drop-title">Arraste os vídeos aqui</div>
+        <div class="drop-sub">ou clique para selecionar</div>
+        <div class="drop-hint">MP4, MOV, MKV, AVI, WMV, WebM</div>
+      </div>
+    </div>
+
+    <!-- Fila de upload -->
+    <div id="view-queue" class="view-queue hidden">
+
+      <div class="queue-header">
+        <span id="queue-count" class="queue-count"></span>
+        <div class="queue-actions">
+          <button id="btn-add-more" class="btn btn-ghost btn-sm">Adicionar mais</button>
+          <button id="btn-cancel"   class="btn btn-ghost btn-sm hidden">Cancelar</button>
+          <button id="btn-upload"   class="btn btn-primary"    disabled>Enviar todos</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="queue-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Título</th>
+              <th>Tamanho</th>
+              <th>Agendado para</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="queue-body"></tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </main>
+
+</div>
+
+<input type="file" id="file-input" accept="video/*" multiple hidden>
+
+<!-- Modal de configuração -->
+<div id="modal-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-title">Como configurar o YouTube Scheduler</span>
+      <button class="modal-close" id="btn-modal-close" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-body">
+
+      <div class="tutorial-step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <div class="step-title">Crie um projeto no Google Cloud</div>
+          <div class="step-desc">
+            Acesse o <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a>, clique em
+            "Selecionar projeto" no topo e depois "Novo projeto". Dê um nome qualquer (ex: <em>inftools</em>).
+          </div>
+        </div>
+      </div>
+
+      <div class="tutorial-step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <div class="step-title">Ative a YouTube Data API v3</div>
+          <div class="step-desc">
+            No menu lateral, vá em <strong>APIs e Serviços → Biblioteca</strong>. Busque por
+            <strong>"YouTube Data API v3"</strong> e clique em <strong>Ativar</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="tutorial-step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <div class="step-title">Crie uma credencial OAuth 2.0</div>
+          <div class="step-desc">
+            Vá em <strong>APIs e Serviços → Credenciais → Criar credencial → ID do cliente OAuth 2.0</strong>.
+            Selecione o tipo <strong>Aplicativo da Web</strong>.
+          </div>
+        </div>
+      </div>
+
+      <div class="tutorial-step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <div class="step-title">Adicione sua origem autorizada</div>
+          <div class="step-desc">
+            Em <strong>Origens JavaScript autorizadas</strong>, adicione a URL onde você vai usar a tool.
+            Ex: <code>https://seuuser.github.io</code>. Para testar localmente, adicione também
+            <code>http://localhost</code>.
+          </div>
+        </div>
+      </div>
+
+      <div class="tutorial-step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <div class="step-title">Configure a tela de consentimento (se necessário)</div>
+          <div class="step-desc">
+            Se solicitado, vá em <strong>Tela de consentimento OAuth</strong>, escolha tipo
+            <strong>Externo</strong> e preencha o nome do app. Não precisa publicar —
+            modo de teste é suficiente. Adicione seu e-mail como usuário de teste.
+          </div>
+        </div>
+      </div>
+
+      <div class="tutorial-step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <div class="step-title">Cole o Client ID aqui</div>
+          <div class="step-desc">
+            Após criar a credencial, copie o <strong>Client ID</strong> (formato
+            <code>xxxxx.apps.googleusercontent.com</code>) e cole no campo da sidebar.
+            Ele fica salvo no seu navegador. Nenhum <strong>client_secret</strong> é
+            usado — o login acontece via popup do Google, igual ao fluxo normal de
+            "Entrar com Google".
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+<script src="js/scheduler.js"></script>
+<script src="js/uploader.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>
