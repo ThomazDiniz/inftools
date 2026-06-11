@@ -35,12 +35,21 @@
 
   /* NAV */
   nav {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
     padding: 20px 40px;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
+  }
+
+  .nav-center {
+    text-align: center;
+    font-size: clamp(18px, 3vw, 26px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--accent);
+    justify-self: center;
   }
 
   .nav-logo {
@@ -63,20 +72,6 @@
     padding: 3px 10px;
   }
 
-  /* HERO */
-  .hero {
-    text-align: center;
-    padding: 80px 40px 60px;
-    flex-shrink: 0;
-  }
-
-  .hero h1 {
-    font-size: clamp(28px, 5vw, 52px);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-    color: var(--accent);
-  }
 
   /* TOOLS GRID */
   .tools-section {
@@ -219,12 +214,9 @@
 
 <nav>
   <div class="nav-logo">inf<span>tools</span></div>
-  <div class="nav-badge">100% local · open source</div>
+  <div class="nav-center">Seu kit de ferramentas</div>
+  <div class="nav-badge" style="justify-self:end">100% local · open source</div>
 </nav>
-
-<section class="hero">
-  <h1>Seu kit de ferramentas</h1>
-</section>
 
 <main class="tools-section">
   <div class="tools-grid">
@@ -250,7 +242,7 @@
 </main>
 
 <div class="privacy-strip">
-  <span><strong>Privacidade por design.</strong> Nenhuma imagem, texto ou dado seu sai do seu navegador. Tudo é processado localmente — sem upload, sem analytics, sem cookies de terceiros.</span>
+  <span><strong>Privacidade por design.</strong> Nenhuma imagem, texto ou dado seu sai do seu navegador. Tudo é processado localmente, sem upload, sem analytics, sem cookies de terceiros. Ferramentas que dependem de APIs externas (como upload de vídeo) indicam isso claramente antes do uso.</span>
 </div>
 
 <footer>inftools · feito por e para criadores</footer>
