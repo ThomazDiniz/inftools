@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>inftools — ferramentas para criadores</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #09090b;
+    --bg2:      #18181b;
+    --border:   #27272a;
+    --muted:    #52525b;
+    --text:     #fafafa;
+    --sub:      #a1a1aa;
+    --accent:   #a855f7;
+    --accent-d: #7e22ce;
+  }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .nav-logo {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 3px 10px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 80px 40px 60px;
+    flex-shrink: 0;
+  }
+
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 6vw, 72px);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    background: linear-gradient(135deg, var(--accent), #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero p {
+    font-size: 16px;
+    color: var(--sub);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ── TOOLS GRID ── */
+  .tools-section {
+    flex: 1;
+    padding: 0 40px 80px;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    gap: 12px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 60% 0%, rgba(168,85,247,.08) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+  }
+
+  .card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(168,85,247,.15);
+  }
+
+  .card:hover::before { opacity: 1; }
+
+  .card-icon {
+    font-size: 32px;
+    line-height: 1;
+  }
+
+  .card-name {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .card-desc {
+    font-size: 13px;
+    color: var(--sub);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+
+  .card-tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: #1f1f23;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 3px 10px;
+  }
+
+  .card-arrow {
+    font-size: 16px;
+    color: var(--muted);
+    transition: color 0.15s, transform 0.15s;
+  }
+
+  .card:hover .card-arrow {
+    color: var(--accent);
+    transform: translateX(3px);
+  }
+
+  /* Coming soon card */
+  .card.soon {
+    opacity: 0.45;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .card.soon .card-tag {
+    color: var(--muted);
+    background: transparent;
+  }
+
+  /* ── PRIVACY STRIP ── */
+  .privacy-strip {
+    margin: 0 40px 40px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    background: #0f0f12;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .privacy-strip .pi { font-size: 18px; flex-shrink: 0; }
+
+  .privacy-strip strong { color: var(--sub); font-weight: 600; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 40px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 600px) {
+    nav, .hero, .tools-section, .privacy-strip { padding-left: 20px; padding-right: 20px; }
+    .hero { padding-top: 48px; padding-bottom: 40px; }
+    footer { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">inf<span>tools</span></div>
+  <div class="nav-badge">100% local · open source</div>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Seu kit de ferramentas</div>
+  <h1>Feito para<br><em>criadores</em></h1>
+  <p>Ferramentas práticas para o dia a dia de influencers e criadores de conteúdo. Tudo roda direto no navegador — sem servidor, sem cadastro, sem vazamento de dados.</p>
+</section>
+
+<main class="tools-section">
+  <div class="section-label">Ferramentas disponíveis</div>
+  <div class="tools-grid">
+
+    <a class="card" href="thumbnail_maker.html">
+      <div class="card-icon">🖼️</div>
+      <div class="card-name">Thumbnail Maker</div>
+      <div class="card-desc">Crie thumbnails para YouTube, Instagram, TikTok e mais — em múltiplos formatos de uma vez só.</div>
+      <div class="card-footer">
+        <span class="card-tag">Visual</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+
+    <div class="card soon">
+      <div class="card-icon">✂️</div>
+      <div class="card-name">Em breve</div>
+      <div class="card-desc">Mais ferramentas chegando. Se tiver sugestão, abre uma issue no repositório.</div>
+      <div class="card-footer">
+        <span class="card-tag">Coming soon</span>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<div class="privacy-strip">
+  <span class="pi">🔒</span>
+  <span><strong>Privacidade por design.</strong> Nenhuma imagem, texto ou dado seu sai do seu navegador. Tudo é processado localmente — sem upload, sem analytics, sem cookies de terceiros.</span>
+</div>
+
+<footer>inftools · feito por e para criadores</footer>
+
+</body>
+</html>
