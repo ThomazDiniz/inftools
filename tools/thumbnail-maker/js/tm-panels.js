@@ -8,10 +8,7 @@
 function switchTab() {}
 
 function onSel()   { renderPropsPanel(); renderLayerPanel(); }
-function onDesel() {
-  el2('rp-panel').innerHTML = '<div class="no-sel"><span class="ni">✦</span>Selecione um elemento</div>';
-  renderLayerPanel();
-}
+function onDesel() { renderBgPanel(); renderLayerPanel(); }
 
 // ─ Properties panel ───────────────────────────────────
 function renderPropsPanel() {

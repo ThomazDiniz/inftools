@@ -174,84 +174,62 @@ function _bgApplyNow(preset) {
 
 // ─ Render the full panel ──────────────────────────────
 function renderBgPanel() {
-  const body = el2('bg-panel-body');
-  if (!body) return;
+  const panel = el2('rp-panel');
+  if (!panel) return;
 
-  // Random buttons
-  let html = `
+  // Flat list of all presets in definition order
+  const allPresets = BG_CATS.flatMap(cat => cat.presets);
+
+  // Favorites row (if any)
+  const favIds = [...bgFavorites].filter(id => BG_BY_ID[id]);
+  const favRow = favIds.length > 0
+    ? `<div class="sub-ttl" style="margin-top:0">⭐ Favoritos</div>
+       <div class="bg-grid">${favIds.map(id => _bgThumbHtml(BG_BY_ID[id])).join('')}</div>
+       <div class="psep" style="margin:6px 0"></div>`
+    : '';
+
+  panel.innerHTML = `
+    <div class="sub-ttl" style="margin-top:0;margin-bottom:6px">Background</div>
     <div class="bg-rand-row">
       <button class="btn btn-g btn-sm" style="flex:1" onclick="randomBg()">🎲 Random</button>
       <button class="btn btn-g btn-sm" style="flex:1" onclick="randomBg('vanoss')">🌈 Vanoss</button>
       <button class="btn btn-g btn-sm" style="flex:1" onclick="randomBg('gaming')">🎮 Gaming</button>
     </div>
-    <div class="bg-rand-row" style="margin-top:4px">
+    <div class="bg-rand-row" style="margin-top:4px;margin-bottom:8px">
       <button class="btn btn-g btn-sm" style="flex:1" onclick="randomBg('reaction')">😱 Reaction</button>
       <button class="btn btn-g btn-sm" style="flex:1" onclick="randomBg('cartoon')">🎨 Cartoon</button>
     </div>
-    <div class="psep" style="margin:8px 0 6px"></div>`;
+    ${favRow}
+    <div class="bg-grid">${allPresets.map(p => _bgThumbHtml(p)).join('')}</div>
+    <div id="bg-adj-panel" style="display:none">
+      <div class="psep" style="margin:8px 0 6px"></div>
+      <div class="sub-ttl">Ajustes</div>
+      <div id="bg-adj-inner"></div>
+    </div>`;
 
-  // Favorites
-  const favIds = [...bgFavorites].filter(id => BG_BY_ID[id]);
-  if (favIds.length > 0) {
-    html += _bgCatHtml({ id:'favs', label:'⭐ Favoritos' }, favIds.map(id => BG_BY_ID[id]), true);
-  }
-
-  // All categories
-  BG_CATS.forEach(cat => {
-    html += _bgCatHtml(cat, cat.presets, false);
-  });
-
-  // Adjustments
-  html += `<div id="bg-adj-panel" style="display:none">
-    <div class="psep" style="margin:8px 0 6px"></div>
-    <div class="sub-ttl">Ajustes do background</div>
-    <div id="bg-adj-inner"></div>
-  </div>`;
-
-  body.innerHTML = html;
-
-  // Bind thumbnail clicks and fav stars
-  body.querySelectorAll('.bg-thumb').forEach(el => {
+  panel.querySelectorAll('.bg-thumb').forEach(el => {
     el.addEventListener('click', () => applyBgPreset(el.dataset.bgId));
   });
-  body.querySelectorAll('.bg-fav-btn').forEach(el => {
+  panel.querySelectorAll('.bg-fav-btn').forEach(el => {
     el.addEventListener('click', e => { e.stopPropagation(); _bgToggleFav(el.dataset.bgId); });
   });
 
-  // Bind category toggle headers
-  body.querySelectorAll('.bg-cat-hdr').forEach(el => {
-    el.addEventListener('click', () => {
-      const grid = el.nextElementSibling;
-      const isOpen = grid.style.display !== 'none';
-      grid.style.display = isOpen ? 'none' : '';
-      el.querySelector('.arr').textContent = isOpen ? '▶' : '▼';
-    });
-  });
-
-  // Restore active highlight + adj panel
   if (activeBgId) {
-    const thumb = body.querySelector(`.bg-thumb[data-bg-id="${activeBgId}"]`);
-    if (thumb) thumb.classList.add('active');
+    panel.querySelector(`.bg-thumb[data-bg-id="${activeBgId}"]`)?.classList.add('active');
     const preset = BG_BY_ID[activeBgId];
     if (preset) _bgRenderAdj(preset);
   }
 }
 
-function _bgCatHtml(cat, presets, startOpen) {
-  const open = startOpen !== false;
-  const thumbs = presets.map(p => {
-    const css = _presetCss(p);
-    const isFav = bgFavorites.has(p.id);
-    const isAct = activeBgId === p.id;
-    return `<div class="bg-thumb${isAct?' active':''}" data-bg-id="${p.id}" title="${p.name}">
-      <div class="bg-thumb-inner" style="background:${css}"></div>
-      <div class="bg-thumb-lbl">${p.name}</div>
-      <div class="bg-fav-btn${isFav?' fav':''}" data-bg-id="${p.id}" title="Favoritar">★</div>
-    </div>`;
-  }).join('');
-
-  return `<div class="bg-cat-hdr"><span>${cat.label}</span><span class="arr">${open?'▼':'▶'}</span></div>
-    <div class="bg-grid" style="${open?'':'display:none'}">${thumbs}</div>`;
+function _bgThumbHtml(p) {
+  const css   = _presetCss(p);
+  const isFav = bgFavorites.has(p.id);
+  const isAct = activeBgId === p.id;
+  return `<div class="bg-thumb${isAct?' active':''}" data-bg-id="${p.id}" title="${p.name}">
+    <div class="bg-thumb-inner" style="background:${css}"></div>
+    <div class="bg-thumb-lbl">${p.name}</div>
+    <div class="bg-fav-btn${isFav?' fav':''}" data-bg-id="${p.id}" title="Favoritar">★</div>
+  </div>`;
 }
 
 // ─ Adjustments panel ──────────────────────────────────
