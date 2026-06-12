@@ -88,7 +88,6 @@ function renderPropsPanel() {
       <div class="pg"><div class="pl">Opacidade</div>
         <div class="sr"><input type="range" id="p-op" min="0" max="100" value="${op}"><span class="sv" id="p-op-v">${op}%</span></div>
       </div>
-      ${ly ? `<button class="btn btn-s btn-sm" style="width:100%;margin-bottom:10px" onclick="removeBgAI(layers.find(l=>l.obj===canvas.getActiveObject()))">✂️ Remover fundo (IA)</button>` : ''}
       <div class="psep"></div>
       <div id="rp-fx"></div>
       <div class="psep"></div>

@@ -1,6 +1,6 @@
 'use strict';
 // ═══════════════════════════════════════════════════════
-// IMAGE LOADING · EFFECTS STATE · AI BG REMOVAL
+// IMAGE LOADING · EFFECTS STATE
 // ═══════════════════════════════════════════════════════
 
 // ─ Drop zones & paste ─────────────────────────────────
@@ -169,35 +169,3 @@ function rebuildFilters(ly) {
   canvas.renderAll();
 }
 
-// ─ AI Background Removal ──────────────────────────────
-async function removeBgAI(ly) {
-  if (!ly || !ly.obj) return;
-  showLoad('Removendo fundo com IA… (1ª vez: baixando modelo ~100 MB)');
-  try {
-    const { removeBackground } = await import(
-      'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/background-removal.js'
-    );
-    const blob = duToBlob(ly.obj.toDataURL({ format: 'png' }));
-    const res  = await removeBackground(blob, {
-      publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.4.5/dist/',
-    });
-    const url  = await blobToDu(res);
-    const old  = { left: ly.obj.left, top: ly.obj.top, scaleX: ly.obj.scaleX, scaleY: ly.obj.scaleY };
-    fabric.Image.fromURL(url, img => {
-      img.set({ ...old, originX: 'center', originY: 'center', selectable: true, name: 'layer', crossOrigin: 'anonymous' });
-      canvas.remove(ly.obj);
-      ly.obj = img; ly.dataUrl = url;
-      inMod = true; canvas.add(img); inMod = false;
-      rebuildZOrder();
-      canvas.setActiveObject(img);
-      renderLayerPanel();
-      canvas.renderAll();
-      toast('✅ Fundo removido!');
-    }, { crossOrigin: 'anonymous' });
-  } catch (e) {
-    console.error(e);
-    toast('❌ Erro ao remover fundo.');
-  } finally {
-    hideLoad();
-  }
-}

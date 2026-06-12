@@ -117,8 +117,16 @@ function restoreHist() {
       const obj = canvas.getObjects().find(o => o.name === 'layer' && !layers.find(l => l.obj === o));
       if (obj) layers.push({ id: sl.id, name: sl.name, obj, dataUrl: sl.dataUrl, effectState: sl.effectState || defaultFxState(), visible: true });
     });
-    designBgRect = null;
-    ensureDesignBg();
+    // Restore designBgRect from JSON (preserves gradient fill on undo/redo)
+    const restoredBg = canvas.getObjects().find(o => o.name === 'designbg');
+    if (restoredBg) {
+      designBgRect = restoredBg;
+      restoredBg.set({ selectable: false, evented: false, hoverCursor: 'default' });
+      canvas.sendToBack(designBgRect);
+    } else {
+      designBgRect = null;
+      ensureDesignBg();
+    }
     canvas.renderAll();
     renderLayerPanel(); onDesel();
     inMod = false;

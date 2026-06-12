@@ -14,6 +14,7 @@ function init() {
   buildFormatTabs();
   buildFormatList();
   buildObjectsPanel();
+  renderBgPanel();
 
   initDropZones();
   initPaste();

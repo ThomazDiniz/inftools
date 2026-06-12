@@ -1,6 +1,6 @@
 # inftools
 
-**[→ Abrir no navegador](https://thomazdiniz.github.io/inftools/inftools/)** · [Repositório](https://github.com/ThomazDiniz/inftools)
+**[→ Abrir no navegador](https://ThomazDiniz.github.io/inftools/)** · [Repositório](https://github.com/ThomazDiniz/inftools)
 
 Ferramentas práticas para criadores de conteúdo e influencers, rodando 100% no navegador.
 
@@ -13,7 +13,10 @@ O projeto é intencional em ser **local-first**: tudo roda no seu navegador, sem
 ## Ferramentas disponíveis
 
 ### 🖼️ Thumbnail Maker
-Editor de thumbnails com canvas. Adicione imagens, textos, formas, emojis e efeitos. Exporte em múltiplos formatos (YouTube, Instagram, TikTok etc.) de uma vez só, ou formato por formato. Tudo processado localmente via Fabric.js.
+Editor de thumbnails com canvas. Adicione imagens, textos, formas, emojis e efeitos. Aplique backgrounds pré-definidos (estilo Vanoss, Gaming, Cartoon etc.) com um clique. Exporte em múltiplos formatos (YouTube, Instagram, TikTok etc.) de uma vez só. Tudo processado localmente via Fabric.js.
+
+### 📅 YouTube Scheduler
+Agende vários vídeos no YouTube de uma vez, com datas, horários e upload direto do navegador via OAuth — sem servidor.
 
 ## Como usar
 
@@ -27,23 +30,34 @@ Pode rodar de três formas:
 
 ```
 inftools/
-├── index.html            ← hub principal
-├── thumbnail_maker.html  ← Thumbnail Maker
-├── thumbnail_maker.css
-├── js/
-│   ├── tm-constants.js
-│   ├── tm-state.js
-│   ├── tm-helpers.js
-│   ├── tm-filters.js
-│   ├── tm-canvas.js
-│   ├── tm-layers.js
-│   ├── tm-images.js
-│   ├── tm-objects.js
-│   ├── tm-panels.js
-│   ├── tm-actions.js
-│   └── tm-main.js
+├── index.html                    ← hub principal
 ├── README.md
-└── diretivas.md
+├── diretivas.md
+└── tools/
+    ├── thumbnail-maker/
+    │   ├── index.html
+    │   ├── thumbnail_maker.css
+    │   └── js/
+    │       ├── tm-constants.js
+    │       ├── tm-state.js
+    │       ├── tm-helpers.js
+    │       ├── tm-filters.js
+    │       ├── tm-canvas.js
+    │       ├── tm-layers.js
+    │       ├── tm-images.js
+    │       ├── tm-objects.js
+    │       ├── tm-panels.js
+    │       ├── tm-backgrounds.js
+    │       ├── tm-actions.js
+    │       └── tm-main.js
+    └── yt-scheduler/
+        ├── index.html
+        ├── style.css
+        └── js/
+            ├── auth.js
+            ├── scheduler.js
+            ├── uploader.js
+            └── main.js
 ```
 
 ## Próximas ferramentas
