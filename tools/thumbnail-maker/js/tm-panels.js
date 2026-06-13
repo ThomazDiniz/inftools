@@ -388,31 +388,10 @@ function renderFxPanel(ly) {
   ).join('');
 
   fxEl.innerHTML = `
-    <div class="sub-ttl" style="margin-top:0">Ajustes de cor</div>
     ${mk('Brilho',      'brightness', -1, 1)}
     ${mk('Contraste',   'contrast',   -1, 1)}
     ${mk('Saturação',   'saturation', -1, 1)}
     ${mk('Vibrance',    'vibrance',   -1, 1)}
-    ${mkChk('Preto & Branco','bw')}
-    ${mkChk('Sépia','sepia')}
-
-    <div class="psep"></div>
-    <div class="sub-ttl">Nitidez / Desfoque</div>
-    ${mk('Blur',             'blur',    0, 1)}
-    ${mk('Sharpen',          'sharpen', 0, 1)}
-    ${mk('HDR',              'hdr',     0, 1)}
-    ${mkChk('Nitidez extrema','extreme_sharpen')}
-    ${mk('Pixelização',  'pixelate',  0, 1)}
-    ${mk('Posterização', 'posterize', 0, 1)}
-
-    <div class="psep"></div>
-    <div class="sub-ttl">Destaque / Contorno</div>
-    <div class="pl" style="margin-bottom:4px">Tipo</div>
-    <div class="ef-seg" id="shadow-seg">${shadowSeg()}</div>
-    <div id="shadow-sub">${_shadowSubHtml(s)}</div>
-
-    <div class="psep"></div>
-    <div class="sub-ttl">Sobreposições</div>
     ${mk('Grain / Ruído',    'grain',    0, 1)}
     ${mk('Escurecimento cantos', 'vignette', 0, 1)}
     ${mkChk('Cor nos cantos','vignette_c')}
@@ -423,8 +402,19 @@ function renderFxPanel(ly) {
     ${mk('Scanlines',    'scanlines', 0, 1)}
     ${mk('Papel antigo', 'warm',      0, 1)}
     ${mk('Motion blur',  'motion_h',  0, 1)}
+    ${mkChk('Preto & Branco','bw')}
+    ${mkChk('Sépia','sepia')}
     ${mkChk('CRT','crt')}
-    ${mkChk('VHS','vhs')}`;
+    ${mkChk('VHS','vhs')}
+    ${mk('Blur',             'blur',    0, 1)}
+    ${mk('Sharpen',          'sharpen', 0, 1)}
+    ${mk('HDR',              'hdr',     0, 1)}
+    ${mkChk('Nitidez extrema','extreme_sharpen')}
+    ${mk('Pixelização',  'pixelate',  0, 1)}
+    ${mk('Posterização', 'posterize', 0, 1)}
+    <div class="pl" style="margin-bottom:4px;margin-top:6px">Destaque</div>
+    <div class="ef-seg" id="shadow-seg">${shadowSeg()}</div>
+    <div id="shadow-sub">${_shadowSubHtml(s)}</div>`;
 
   fxEl.querySelectorAll('input[type=range][data-key]').forEach(el => {
     el.addEventListener('input', () => {

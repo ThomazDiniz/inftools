@@ -38,15 +38,15 @@
     <div class="s-sec">
       <div class="s-ttl">Objetos</div>
 
-      <div class="obj-grid">
-        <button class="obj-btn" onclick="addText()"><span class="ob-ic" style="font-size:18px;font-weight:900;font-family:Georgia,serif">T</span>Texto</button>
-        <button class="obj-btn" onclick="addShape('circle')"><span class="ob-ic">🔴</span>Círculo</button>
-        <button class="obj-btn" onclick="addShape('arrow')"><span class="ob-ic">→</span>Seta</button>
-        <button class="obj-btn" onclick="addShape('arrowcurve')"><span class="ob-ic">↷</span>S. Curva</button>
-        <button class="obj-btn" onclick="addShape('rect')"><span class="ob-ic">🟥</span>Retângulo</button>
-        <button class="obj-btn" onclick="addShape('line')"><span class="ob-ic">📏</span>Linha</button>
-        <button id="draw-toggle-btn" class="obj-btn" style="transition:background .12s,border-color .12s,color .12s" onclick="toggleDrawMode()"><span class="ob-ic" id="draw-icon">✏</span><span id="draw-label">Pincel</span></button>
-        <button class="obj-btn" onclick="addFrame()"><span class="ob-ic">🖼</span>Moldura</button>
+      <div class="obj-grid" style="grid-template-columns:repeat(5,1fr);gap:3px">
+        <button class="obj-btn obj-btn-em" title="Texto" onclick="addText()"><span class="ob-ic" style="font-size:18px;font-weight:900;font-family:Georgia,serif">T</span></button>
+        <button class="obj-btn obj-btn-em" title="Círculo" onclick="addShape('circle')"><span class="ob-ic">🔴</span></button>
+        <button class="obj-btn obj-btn-em" title="Seta" onclick="addShape('arrow')"><span class="ob-ic">→</span></button>
+        <button class="obj-btn obj-btn-em" title="Seta Curva" onclick="addShape('arrowcurve')"><span class="ob-ic">↷</span></button>
+        <button class="obj-btn obj-btn-em" title="Retângulo" onclick="addShape('rect')"><span class="ob-ic">🟥</span></button>
+        <button class="obj-btn obj-btn-em" title="Linha" onclick="addShape('line')"><span class="ob-ic">📏</span></button>
+        <button id="draw-toggle-btn" class="obj-btn obj-btn-em" title="Pincel" style="transition:background .12s,border-color .12s,color .12s" onclick="toggleDrawMode()"><span class="ob-ic" id="draw-icon">✏</span></button>
+        <button class="obj-btn obj-btn-em" title="Moldura" onclick="addFrame()"><span class="ob-ic">🖼</span></button>
       </div>
 
       <!-- Draw controls – visible only when draw mode is active -->
@@ -69,12 +69,12 @@
         </div>
       </div>
 
-      <div class="sub-ttl">Filtros</div>
-      <div class="obj-grid" id="layer-fx-grid"></div>
-
       <div class="obj-grid" id="emoji-grid"></div>
       <div class="obj-grid" id="rage-grid"></div>
       <div class="obj-grid" id="canvas-fx-grid"></div>
+
+      <div class="sub-ttl" style="margin-top:8px">Filtros de camada</div>
+      <div id="layer-fx-grid"></div>
 
     </div>
 
