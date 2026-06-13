@@ -13,7 +13,16 @@
 
 <nav>
   <a class="back-link" href="../../">← inftools</a>
-  <span class="nav-title">YouTube Scheduler</span>
+  <div style="display:flex;align-items:center;gap:8px;position:relative">
+    <span class="nav-title">YouTube Scheduler</span>
+    <button id="why-btn" aria-label="Por que essa tool existe?" style="background:transparent;border:1px solid var(--border2);color:var(--muted);border-radius:50%;width:18px;height:18px;font-size:10px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s;font-family:'Inter',sans-serif;line-height:1" onmouseenter="showWhy()" onmouseleave="hideWhy()" onclick="toggleWhy()">?</button>
+    <div id="why-pop" style="display:none;position:absolute;top:calc(100% + 10px);left:0;background:#0f1a12;border:1px solid var(--border2);border-radius:10px;padding:14px 16px;width:290px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.5);font-size:12px;line-height:1.7;color:#7ab588">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#3d6b47;margin-bottom:8px">Por que essa tool?</div>
+      Quando comecei a fazer muitos Shorts, percebi que não precisava de toda aquela configuração manual da API do YouTube.<br><br>
+      O que eu precisava era simples: o <strong style="color:#e8f5eb">título vinha direto do nome do arquivo</strong>, e o <strong style="color:#e8f5eb">horário eu definia na hora</strong>. O único padrão era que <strong style="color:#e8f5eb">os dias se repetiam sempre do mesmo jeito</strong> — tantos vídeos por dia, nos mesmos slots de horário.<br><br>
+      <span style="color:#3d6b47">Então fiz uma tool que faz exatamente isso, sem mais nem menos.</span>
+    </div>
+  </div>
   <div class="nav-right">
     <div class="auth-info">
       <span class="auth-dot" id="auth-dot"></span>
@@ -243,6 +252,43 @@
   </div>
 </div>
 
+<script>
+(function(){
+  let hideT, pinned = false;
+  window.showWhy = function() {
+    clearTimeout(hideT);
+    document.getElementById('why-pop').style.display = 'block';
+    document.getElementById('why-btn').style.borderColor = 'var(--sub)';
+    document.getElementById('why-btn').style.color = 'var(--sub)';
+  };
+  window.hideWhy = function() {
+    if (pinned) return;
+    hideT = setTimeout(() => {
+      document.getElementById('why-pop').style.display = 'none';
+      document.getElementById('why-btn').style.borderColor = 'var(--border2)';
+      document.getElementById('why-btn').style.color = 'var(--muted)';
+    }, 200);
+  };
+  window.toggleWhy = function() {
+    pinned = !pinned;
+    if (pinned) { showWhy(); } else { pinned = false; hideWhy(); }
+  };
+  // keep open when hovering the popover itself
+  document.addEventListener('DOMContentLoaded', () => {
+    const pop = document.getElementById('why-pop');
+    pop.addEventListener('mouseenter', () => { clearTimeout(hideT); });
+    pop.addEventListener('mouseleave', () => { if (!pinned) hideWhy(); });
+    document.addEventListener('click', e => {
+      if (pinned && !e.target.closest('#why-btn') && !e.target.closest('#why-pop')) {
+        pinned = false;
+        document.getElementById('why-pop').style.display = 'none';
+        document.getElementById('why-btn').style.borderColor = 'var(--border2)';
+        document.getElementById('why-btn').style.color = 'var(--muted)';
+      }
+    });
+  });
+})();
+</script>
 <script src="js/auth.js"></script>
 <script src="js/scheduler.js"></script>
 <script src="js/uploader.js"></script>
