@@ -127,6 +127,16 @@ function restoreHist() {
       designBgRect = null;
       ensureDesignBg();
     }
+    // Restore bgImageObj from JSON
+    if (typeof bgImageObj !== 'undefined') {
+      const restoredImg = canvas.getObjects().find(o => o.name === 'bgimage');
+      bgImageObj = restoredImg || null;
+      if (restoredImg) {
+        restoredImg.set({ selectable: false, evented: false, hoverCursor: 'default' });
+        canvas.sendToBack(restoredImg);
+        canvas.sendToBack(designBgRect);
+      }
+    }
     canvas.renderAll();
     renderLayerPanel(); onDesel();
     inMod = false;
@@ -207,6 +217,8 @@ function clearAll() {
   if (!confirm('Limpar tudo?')) return;
   canvas.clear();
   designBgRect = null;
+  if (typeof bgImageObj !== 'undefined') bgImageObj = null;
+  if (typeof activeBgId !== 'undefined') activeBgId = null;
   layers = [];
   renderLayerPanel(); onDesel();
   ensureDesignBg();

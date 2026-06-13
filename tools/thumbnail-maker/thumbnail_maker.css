@@ -150,6 +150,7 @@ select.pi{appearance:none;cursor:pointer}
 
 /* ─ BACKGROUND PRESETS ─ */
 .bg-rand-row{display:flex;gap:4px}
+.bg-search-row{display:flex;gap:4px;margin-top:0}
 .bg-cat-hdr{display:flex;justify-content:space-between;align-items:center;padding:5px 0;cursor:pointer;font-size:11px;font-weight:600;color:#a1a1aa;user-select:none}
 .bg-cat-hdr:hover{color:#fafafa}
 .bg-cat-hdr .arr{font-size:9px;color:#71717a}
@@ -159,9 +160,6 @@ select.pi{appearance:none;cursor:pointer}
 .bg-thumb.active{border-color:#7c3aed;box-shadow:0 0 0 1px #7c3aed}
 .bg-thumb-inner{width:100%;aspect-ratio:16/9}
 .bg-thumb-lbl{font-size:7px;color:#71717a;padding:2px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;background:#1a1a1e}
-.bg-fav-btn{position:absolute;top:2px;right:2px;font-size:10px;color:rgba(255,255,255,0.35);cursor:pointer;padding:1px 2px;background:rgba(0,0,0,0.5);border-radius:2px;line-height:1;display:none;border:none}
-.bg-thumb:hover .bg-fav-btn,.bg-fav-btn.fav{display:block}
-.bg-fav-btn.fav{color:#fbbf24}
 
 /* Scrollbar */
 ::-webkit-scrollbar{width:4px}
