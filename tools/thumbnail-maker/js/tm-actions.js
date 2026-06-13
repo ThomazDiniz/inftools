@@ -65,6 +65,7 @@ function initKeyboard() {
     if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.shiftKey && e.key === 'z'))) { e.preventDefault(); redo(); }
     if ((e.ctrlKey || e.metaKey) && e.key === 'd') { e.preventDefault(); duplicate(); }
     if ((e.key === 'Delete' || e.key === 'Backspace') && obj && !obj.isEditing) { e.preventDefault(); deleteSelected(); }
+    if (e.key === 'Escape' && typeof _drawActive !== 'undefined' && _drawActive) { e.preventDefault(); exitDrawMode(); }
   });
 }
 

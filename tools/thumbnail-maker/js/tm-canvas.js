@@ -25,6 +25,10 @@ function initCanvas() {
   canvas.on('object:added',   () => { if (!inMod) schedHist(); });
   canvas.on('object:removed', () => { if (!inMod) schedHist(); });
   canvas.on('text:changed',   () => renderPropsPanel());
+  canvas.on('path:created',  (e)  => {
+    e.path.set({ name: 'draw' });
+    schedHist();
+  });
   window.addEventListener('resize', () => resizeCv());
 }
 

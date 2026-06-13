@@ -68,14 +68,14 @@ function addShape(type) {
       obj = new fabric.Circle({ ...base, radius: 80, fill: 'transparent', stroke: '#ff0000', strokeWidth: 8 });
       break;
     case 'arrow':
-      // Solid filled arrow pointing right
-      obj = new fabric.Path('M -65 -20 L 15 -20 L 15 -48 L 70 0 L 15 48 L 15 20 L -65 20 Z', {
+      // Solid filled arrow pointing right — wide head for visibility
+      obj = new fabric.Path('M -75 -16 L 5 -16 L 5 -52 L 75 0 L 5 52 L 5 16 L -75 16 Z', {
         ...base, fill: '#ff0000', stroke: 'none', strokeWidth: 0,
       });
       break;
     case 'arrowcurve':
-      // Curved arrow: thick body via cubic bezier, symmetric arrowhead at end.
-      obj = new fabric.Path('M -55 50 C -55 -20 5 -65 45 -50 L 25 -70 L 70 -42 L 45 -25 C 10 -40 -30 0 -30 50 Z', {
+      // Half-circle arc (outer r=65, inner r=42) with downward arrowhead at right end
+      obj = new fabric.Path('M -65 0 C -65 -36 -36 -65 0 -65 C 36 -65 65 -36 65 0 L 80 0 L 65 38 L 50 0 C 50 -23 23 -42 0 -42 C -23 -42 -42 -23 -42 0 Z', {
         ...base, fill: '#ff0000', stroke: 'none', strokeWidth: 0,
       });
       break;
@@ -251,4 +251,46 @@ function rebuildFrame(oldObj, style, color, thickness) {
   canvas.add(newObj); canvas.bringToFront(newObj); canvas.setActiveObject(newObj);
   canvas.renderAll(); saveHist();
   renderPropsPanel();
+}
+
+// ─ Freehand drawing ───────────────────────────────────
+let _drawActive = false;
+
+function toggleDrawMode() {
+  _drawActive = !_drawActive;
+  canvas.isDrawingMode = _drawActive;
+
+  const btn   = document.getElementById('draw-toggle-btn');
+  const icon  = document.getElementById('draw-icon');
+  const label = document.getElementById('draw-label');
+  const ctrl  = document.getElementById('draw-controls');
+
+  if (_drawActive) {
+    btn.style.background  = 'rgba(124,58,237,.18)';
+    btn.style.borderColor = '#7c3aed';
+    btn.style.color       = '#c4b5fd';
+    icon.textContent      = '⏹';
+    label.textContent     = 'Parar pincel';
+    ctrl.style.display    = 'block';
+    updateBrush();
+    canvas.discardActiveObject();
+    canvas.renderAll();
+  } else {
+    btn.style.background  = '';
+    btn.style.borderColor = '';
+    btn.style.color       = '';
+    icon.textContent      = '✏';
+    label.textContent     = 'Pincel livre';
+    ctrl.style.display    = 'none';
+  }
+}
+
+function updateBrush() {
+  if (!canvas.freeDrawingBrush) return;
+  canvas.freeDrawingBrush.color = document.getElementById('draw-color')?.value || '#ff0000';
+  canvas.freeDrawingBrush.width = parseInt(document.getElementById('draw-size')?.value || 12);
+}
+
+function exitDrawMode() {
+  if (_drawActive) toggleDrawMode();
 }
