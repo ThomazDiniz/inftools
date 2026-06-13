@@ -26,8 +26,33 @@ function initCanvas() {
   canvas.on('object:removed', () => { if (!inMod) schedHist(); });
   canvas.on('text:changed',   () => renderPropsPanel());
   canvas.on('path:created',  (e)  => {
-    e.path.set({ name: 'draw' });
-    schedHist();
+    const path = e.path;
+    const outlineCb = document.getElementById('draw-outline');
+
+    if (outlineCb?.checked) {
+      const outlineColor = document.getElementById('draw-outline-color')?.value || '#000000';
+      // Remove auto-added path before re-adding as group
+      inMod = true; canvas.remove(path); inMod = false;
+
+      path.clone(outlined => {
+        outlined.set({
+          stroke:          outlineColor,
+          strokeWidth:     (path.strokeWidth || 12) + 8,
+          strokeLineCap:   'round',
+          strokeLineJoin:  'round',
+          fill:            '',
+        });
+        const grp = new fabric.Group([outlined, path], { name: 'draw' });
+        canvas.add(grp);
+        canvas.bringToFront(grp);
+        canvas.setActiveObject(grp);
+        canvas.renderAll();
+        schedHist();
+      });
+    } else {
+      path.set({ name: 'draw' });
+      schedHist();
+    }
   });
   window.addEventListener('resize', () => resizeCv());
 }

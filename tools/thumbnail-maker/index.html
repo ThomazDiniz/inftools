@@ -84,6 +84,14 @@
             oninput="updateBrush();document.getElementById('draw-size-lbl').textContent=this.value+'px'">
           <span id="draw-size-lbl" style="font-size:11px;color:#a1a1aa;width:30px;text-align:right">12px</span>
         </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
+          <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
+            <input type="checkbox" id="draw-outline" style="accent-color:#7c3aed">
+            <span style="font-size:11px;color:#a1a1aa">Outline</span>
+          </label>
+          <input type="color" id="draw-outline-color" value="#000000" title="Cor do outline"
+            style="width:28px;height:22px;border:none;background:none;cursor:pointer;border-radius:3px;padding:1px">
+        </div>
         <div style="font-size:10px;color:#52525b;margin-top:6px">Esc para sair • Del para apagar selecionado</div>
       </div>
     </div>
