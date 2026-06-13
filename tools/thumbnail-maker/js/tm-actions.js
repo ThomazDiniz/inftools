@@ -219,6 +219,7 @@ function clearAll() {
   designBgRect = null;
   if (typeof bgImageObj !== 'undefined') bgImageObj = null;
   if (typeof activeBgId !== 'undefined') activeBgId = null;
+  if (typeof activeBgSampleId !== 'undefined') activeBgSampleId = -1;
   layers = [];
   renderLayerPanel(); onDesel();
   ensureDesignBg();

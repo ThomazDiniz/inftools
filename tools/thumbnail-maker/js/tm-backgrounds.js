@@ -59,10 +59,37 @@ const BG_CATS = [
 const BG_BY_ID = {};
 BG_CATS.forEach(cat => cat.presets.forEach(p => { p.catId = cat.id; BG_BY_ID[p.id] = p; }));
 
+// ─ Sample images ──────────────────────────────────────
+const SAMPLE_FILES = [
+  '1 - oKqJH3r.jpg','2 - t5dmy8u.jpg','3 - uC1VC8I.jpg','4 - DxcFNnH.jpg','5 - t0xxl67.jpg',
+  '6 - Usyr3i3.jpg','7 - gcgLKjb.jpg','8 - nC8UC5z.jpg','9 - d63qvTa.jpg','10 - Wan5U64.jpg',
+  '11 - AZTtlir.jpg','12 - uai6K6D.jpg','13 - EyTRTCM.jpg','14 - i18HU3B.jpg','15 - ZGnitAI.jpg',
+  '16 - z3DZVH4.jpg','17 - IY1CFKQ.jpg','18 - osXmyie.jpg','19 - lgQxVbl.jpg','20 - quef2rp.jpg',
+  '21 - jNM62jr.jpg','22 - eR0Vc20.jpg','23 - gYRGqBt.jpg','24 - hG08TYX.jpg','25 - a5KbTAk.jpg',
+  '26 - eNWO3iX.jpg','27 - Nici7Mn.jpg','28 - GiDQ5Lc.jpg','29 - Py4jW3B.jpg','30 - GrnNaPA.jpg',
+  '31 - 7cH1lVU.jpg','32 - hlHQ4cn.jpg','33 - qrAdk9U.jpg','34 - jAEMgT8.jpg','35 - HNm6JdB.jpg',
+  '36 - edB2FYo.jpg','37 - UWcdGuR.jpg','38 - vFtYWSc.jpg','39 - 2FsQkNK.jpg','40 - wbOvjNk.jpg',
+  '41 - 4ORh9O1.jpg','42 - irt5RIo.jpg','43 - 5T3rn5A.jpg','44 - 3CIyH4t.jpg','45 - BiaOOax.jpg',
+  '46 - vExL265.jpg','47 - P7UkUbq.jpg','48 - d2JFXUX.jpg','49 - Oife76z.jpg','50 - nOlCsPs.jpg',
+  '51 - QJg9HYk.jpg','52 - MYwhQfO.jpg','53 - U5D6iHd.jpg','54 - 57czJam.jpg','55 - nDp7mRu.jpg',
+  '56 - xR2OLsl.jpg','57 - FeFakTM.jpg','58 - lgrpOty.jpg','59 - ArOfV9t.jpg','60 - QKb5WyY.jpg',
+  '61 - xM733yp.jpg','62 - rBvrVqG.jpg','63 - VgWCjRg.jpg','64 - oeCGpuw.jpg','65 - Pe0xLZd.jpg',
+  '66 - jjGcC5x.jpg','67 - zWPKQNC.jpg','68 - iFHHgxS.jpg','69 - kvDfyS6.jpg','70 - 0XFZAeR.jpg',
+  '71 - rEePXkC.jpg','72 - phR8FqC.jpg','73 - AevMdZC.jpg','74 - RYM2YJ6.jpg','75 - PC8M78E.jpg',
+  '76 - rHnKbQn.jpg','77 - C5BVHjh.jpg','78 - QMR9lkd.jpg','79 - wL7BDl1.jpg','80 - OxExK8q.jpg',
+  '81 - VZM63qN.jpg','82 - u3uKeOr.jpg','83 - WaHYO3m.jpg','84 - iTHCAv1.jpg','85 - 6qGlAUC.jpg',
+  '86 - QfSl17N.jpg','87 - gzEXEo8.jpg','88 - gsRY2gI.jpg','89 - WzUwUT6.jpg','90 - FYHlLyk.jpg',
+  '91 - YBYbJ5t.jpg','92 - 06M37RZ.jpg','93 - JrTpNFY.jpg','94 - tj6xWD3.jpg','95 - uV43TbX.jpg',
+  '96 - RDWH0j9.jpg','97 - LUDDBEn.jpg','98 - BrcsG9E.jpg','99 - K6NbAuW.jpg','100 - Z41Z4E9.jpg',
+  '101 - yHstczN.jpg','102 - OmlnnH2.jpg',
+];
+function sampleUrl(file) { return `images/samples/${encodeURIComponent(file)}`; }
+
 // ─ State ──────────────────────────────────────────────
-let activeBgId  = null;
-let bgImageObj  = null;
-let bgAdj       = { angle: 135, brightness: 0, saturation: 0, inverted: false };
+let activeBgId       = null;
+let activeBgSampleId = -1;
+let bgImageObj       = null;
+let bgAdj            = { angle: 135, brightness: 0, saturation: 0, inverted: false };
 
 // ─ Color helpers ──────────────────────────────────────
 function _bgH2r(hex) {
@@ -112,6 +139,7 @@ function _bgClearImage() {
     inMod = true; canvas.remove(bgImageObj); inMod = false;
     bgImageObj = null;
   }
+  activeBgSampleId = -1;
 }
 
 // ─ Apply gradient / solid preset ─────────────────────
@@ -161,6 +189,42 @@ function _bgApplyNow(preset) {
   canvas.renderAll();
 }
 
+// ─ Apply sample image as background ──────────────────
+function applyBgSample(idx) {
+  const file = SAMPLE_FILES[idx];
+  if (!file || !designBgRect) return;
+  showLoad('Carregando…');
+  _bgClearImage();
+  activeBgId = null;
+  designBgRect.set('fill', '#111114');
+  canvas.renderAll();
+  fabric.Image.fromURL(sampleUrl(file), (img, isError) => {
+    hideLoad();
+    if (!img || isError) { toast('❌ Erro ao carregar imagem'); return; }
+    const scale = Math.max(DW / img.width, DH / img.height);
+    img.set({
+      left: DW/2, top: DH/2,
+      originX: 'center', originY: 'center',
+      scaleX: scale, scaleY: scale,
+      selectable: false, evented: false,
+      hoverCursor: 'default',
+      name: 'bgimage',
+    });
+    bgImageObj = img;
+    activeBgSampleId = idx;
+    inMod = true; canvas.add(img); inMod = false;
+    canvas.sendToBack(img);
+    canvas.sendToBack(designBgRect);
+    document.querySelectorAll('.bg-thumb[data-si]').forEach(el => {
+      el.classList.toggle('active', parseInt(el.dataset.si) === idx);
+    });
+    const adj = el2('bg-adj-panel');
+    if (adj) adj.style.display = 'none';
+    canvas.renderAll();
+    saveHist();
+  }, { crossOrigin: 'anonymous' });
+}
+
 // ─ Render panel (right panel when nothing selected) ───
 function renderBgPanel() {
   const panel = el2('rp-panel');
@@ -178,10 +242,28 @@ function renderBgPanel() {
       <div class="psep" style="margin:8px 0 6px"></div>
       <div class="sub-ttl">Ajustes</div>
       <div id="bg-adj-inner"></div>
+    </div>
+
+    <div class="psep" style="margin:10px 0 6px"></div>
+    <div class="sub-ttl" style="margin-bottom:6px">
+      Exemplos reais
+      <span style="font-size:9px;font-weight:400;color:#52525b;text-transform:none;margin-left:4px">${SAMPLE_FILES.length} thumbnails</span>
+    </div>
+    <div class="bg-samples-wrap">
+      <div class="bg-samples-grid">
+        ${SAMPLE_FILES.map((f,i) => `
+          <div class="bg-thumb bg-sample-thumb${activeBgSampleId===i?' active':''}" data-si="${i}" title="Exemplo ${i+1}">
+            <img class="bg-thumb-inner" src="${sampleUrl(f)}" loading="lazy" alt="Exemplo ${i+1}" style="width:100%;aspect-ratio:16/9;object-fit:cover;display:block">
+            <button class="bg-sample-eye" onclick="event.stopPropagation();openLightbox(${i})" title="Ver maior">⤢</button>
+          </div>`).join('')}
+      </div>
     </div>`;
 
   panel.querySelectorAll('.bg-thumb[data-bg-id]').forEach(el => {
     el.addEventListener('click', () => applyBgPreset(el.dataset.bgId));
+  });
+  panel.querySelectorAll('.bg-sample-thumb').forEach(el => {
+    el.addEventListener('click', () => applyBgSample(parseInt(el.dataset.si)));
   });
 
   if (activeBgId) {
