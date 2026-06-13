@@ -28,6 +28,13 @@ const RAGE_FACES = [
   {l:'🤦 DERP', t:'🤦'}, {l:'😈 EVIL', t:'😈'}, {l:'🤬 FUUU', t:'🤬'},
 ];
 
+const LAYER_FX = [
+  { l: 'Motion Blur',    key: 'motionblur', ic: '💨', fn: 'toggleMotionBlur' },
+  { l: 'Papel antigo',   key: 'oldpaper',   ic: '📜', fn: 'toggleOldPaper'  },
+  { l: 'Scanlines',      key: 'scanline',   ic: '📺', fn: 'toggleScanlines' },
+  { l: 'Cantos escuros', key: 'vignette',   ic: '🔲', fn: 'toggleVignette'  },
+];
+
 const CANVAS_FX = [
   {l:'Speed Lines', fn:'addSpeedLines'},
   {l:'Impact Burst', fn:'addImpactBurst'},

@@ -30,11 +30,30 @@ function buildObjectsPanel() {
   });
 
 
-  // Canvas FX
+  // Layer FX toggles
+  const lfx = el2('layer-fx-grid');
+  if (lfx) {
+    lfx.style.gridTemplateColumns = 'repeat(4,1fr)';
+    lfx.style.gap = '3px';
+    LAYER_FX.forEach(fx => {
+      const b = document.createElement('button');
+      b.className = 'obj-btn obj-btn-em';
+      b.id = 'lfx-' + fx.key;
+      b.title = fx.l;
+      b.innerHTML = `<span class="ob-ic" style="font-size:18px">${fx.ic}</span>`;
+      b.onclick = () => window[fx.fn]?.();
+      lfx.appendChild(b);
+    });
+  }
+
+  // Canvas FX — 5 per row, icon-only
   const cfx = el2('canvas-fx-grid');
+  cfx.style.gridTemplateColumns = 'repeat(5,1fr)';
+  cfx.style.gap = '3px';
   CANVAS_FX.forEach(fx => {
-    const b = document.createElement('button'); b.className = 'obj-btn';
-    b.innerHTML = `<span class="ob-ic" style="font-size:13px">✨</span><span style="font-size:9px">${fx.l}</span>`;
+    const b = document.createElement('button'); b.className = 'obj-btn obj-btn-em';
+    b.title = fx.l;
+    b.innerHTML = `<span class="ob-ic" style="font-size:16px">✨</span>`;
     b.onclick = () => window[fx.fn] && window[fx.fn]();
     cfx.appendChild(b);
   });
@@ -73,8 +92,10 @@ function addShape(type) {
       });
       break;
     case 'arrowcurve':
-      // Half-circle arc (outer r=65, inner r=42) with downward arrowhead at right end
-      obj = new fabric.Path('M -65 0 C -65 -36 -36 -65 0 -65 C 36 -65 65 -36 65 0 L 80 0 L 65 38 L 50 0 C 50 -23 23 -42 0 -42 C -23 -42 -42 -23 -42 0 Z', {
+      // Half-circle arc (outer r=65, inner r=42).
+      // Wings are at y=8 (below arc end) so no flat horizontal ledge at y=0.
+      // (65,0)→(76,8): right wing; (34,8)→(42,0): diagonal back to inner-arc start.
+      obj = new fabric.Path('M -65 0 C -65 -36 -36 -65 0 -65 C 36 -65 65 -36 65 0 L 76 8 L 55 52 L 34 8 L 42 0 C 42 -23 23 -42 0 -42 C -23 -42 -42 -23 -42 0 Z', {
         ...base, fill: '#ff0000', stroke: 'none', strokeWidth: 0,
       });
       break;
@@ -250,6 +271,95 @@ function rebuildFrame(oldObj, style, color, thickness) {
   canvas.add(newObj); canvas.bringToFront(newObj); canvas.setActiveObject(newObj);
   canvas.renderAll(); saveHist();
   renderPropsPanel();
+}
+
+// ─ Layer FX (toggle overlays) ─────────────────────────
+const _layerFx = { motionblur: null, oldpaper: null, scanline: null, vignette: null };
+
+function _applyLayerFx(key, drawFn) {
+  const btn = document.getElementById('lfx-' + key);
+  if (_layerFx[key]) {
+    canvas.remove(_layerFx[key]);
+    _layerFx[key] = null;
+    btn?.classList.remove('lfx-active');
+    canvas.renderAll(); saveHist();
+    return;
+  }
+  const oc = document.createElement('canvas');
+  oc.width = DW; oc.height = DH;
+  drawFn(oc.getContext('2d'));
+  fabric.Image.fromURL(oc.toDataURL(), img => {
+    img.set({ left: DW/2, top: DH/2, originX: 'center', originY: 'center',
+              selectable: true, name: 'layerfx_' + key });
+    _layerFx[key] = img;
+    canvas.add(img); canvas.bringToFront(img);
+    btn?.classList.add('lfx-active');
+    canvas.renderAll(); saveHist();
+  });
+}
+
+function syncLayerFxState() {
+  Object.keys(_layerFx).forEach(key => {
+    const obj = canvas.getObjects().find(o => o.name === 'layerfx_' + key);
+    _layerFx[key] = obj || null;
+    document.getElementById('lfx-' + key)?.classList.toggle('lfx-active', !!obj);
+  });
+}
+
+function toggleMotionBlur() {
+  _applyLayerFx('motionblur', ctx => {
+    for (let i = 0; i < 220; i++) {
+      const y   = Math.random() * DH;
+      const len = DW * (0.45 + Math.random() * 0.55);
+      const x   = Math.random() * (DW - len);
+      const h   = 0.4 + Math.random() * 2.8;
+      const a   = 0.04 + Math.random() * 0.2;
+      const g   = ctx.createLinearGradient(x, y, x + len, y);
+      g.addColorStop(0,   `rgba(255,255,255,0)`);
+      g.addColorStop(0.2, `rgba(255,255,255,${a})`);
+      g.addColorStop(0.8, `rgba(255,255,255,${a})`);
+      g.addColorStop(1,   `rgba(255,255,255,0)`);
+      ctx.fillStyle = g;
+      ctx.fillRect(x, y - h / 2, len, h);
+    }
+  });
+}
+
+function toggleOldPaper() {
+  _applyLayerFx('oldpaper', ctx => {
+    // Sepia tint
+    ctx.fillStyle = 'rgba(175,138,55,0.28)';
+    ctx.fillRect(0, 0, DW, DH);
+    // Film grain
+    const id = ctx.createImageData(DW, DH);
+    const d  = id.data;
+    for (let i = 0; i < d.length; i += 4) {
+      const v = Math.round((Math.random() - 0.5) * 40 + 128);
+      d[i] = d[i+1] = d[i+2] = Math.min(255, Math.max(0, v));
+      d[i+3] = Math.round(Math.random() * 26 + 8);
+    }
+    ctx.putImageData(id, 0, 0);
+  });
+}
+
+function toggleScanlines() {
+  _applyLayerFx('scanline', ctx => {
+    for (let y = 0; y < DH; y += 4) {
+      ctx.fillStyle = 'rgba(0,0,0,0.35)';
+      ctx.fillRect(0, y, DW, 2);
+    }
+  });
+}
+
+function toggleVignette() {
+  _applyLayerFx('vignette', ctx => {
+    const g = ctx.createRadialGradient(DW/2, DH/2, DH * 0.18, DW/2, DH/2, DH * 0.88);
+    g.addColorStop(0,   'rgba(0,0,0,0)');
+    g.addColorStop(0.6, 'rgba(0,0,0,0)');
+    g.addColorStop(1,   'rgba(0,0,0,0.86)');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, DW, DH);
+  });
 }
 
 // ─ Freehand drawing ───────────────────────────────────

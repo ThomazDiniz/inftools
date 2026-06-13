@@ -140,6 +140,7 @@ function restoreHist() {
     }
     canvas.renderAll();
     renderLayerPanel(); onDesel();
+    if (typeof syncLayerFxState === 'function') syncLayerFxState();
     inMod = false;
   });
 }
@@ -221,6 +222,10 @@ function clearAll() {
   if (typeof bgImageObj !== 'undefined') bgImageObj = null;
   if (typeof activeBgId !== 'undefined') activeBgId = null;
   if (typeof activeBgSampleId !== 'undefined') activeBgSampleId = -1;
+  if (typeof _layerFx !== 'undefined') Object.keys(_layerFx).forEach(k => {
+    _layerFx[k] = null;
+    document.getElementById('lfx-' + k)?.classList.remove('lfx-active');
+  });
   layers = [];
   renderLayerPanel(); onDesel();
   ensureDesignBg();

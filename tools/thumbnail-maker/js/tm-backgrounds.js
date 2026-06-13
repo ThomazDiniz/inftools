@@ -212,9 +212,10 @@ function applyBgSample(idx) {
     });
     bgImageObj = img;
     activeBgSampleId = idx;
-    inMod = true; canvas.add(img); inMod = false;
-    canvas.sendToBack(img);
-    canvas.sendToBack(designBgRect);
+    // Place bgimage directly at index 1 (right behind all layers)
+    // instead of add-to-top + sendToBack to avoid Fabric rAF race condition
+    canvas.sendToBack(designBgRect); // ensure designBgRect is at 0
+    inMod = true; canvas.insertAt(img, 1); inMod = false;
     document.querySelectorAll('.bg-thumb[data-si]').forEach(el => {
       el.classList.toggle('active', parseInt(el.dataset.si) === idx);
     });

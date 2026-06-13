@@ -63,6 +63,7 @@ kbd{background:#3f3f46;border-radius:3px;padding:1px 4px;font-size:9px;font-fami
 .obj-btn:hover{background:#3f3f46;border-color:#7c3aed}
 .obj-btn-em{padding:3px 2px;gap:0}
 .obj-btn-em .ob-ic{font-size:20px;line-height:1.2}
+.lfx-active{background:rgba(124,58,237,.2)!important;border-color:#7c3aed!important;color:#c4b5fd!important}
 .sub-ttl{font-size:9px;color:#52525b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;margin-top:6px}
 
 /* ─ CANVAS AREA ─ */
