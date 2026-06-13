@@ -5,20 +5,26 @@
 
 // ─ Objects panel builder ──────────────────────────────
 function buildObjectsPanel() {
-  // Emojis
+  // Emojis — 5 per row, icon-only
   const eg = el2('emoji-grid');
-  EMOJIS.slice(0, 9).forEach(em => {
-    const b = document.createElement('button'); b.className = 'obj-btn';
+  eg.style.gridTemplateColumns = 'repeat(5,1fr)';
+  eg.style.gap = '3px';
+  EMOJIS.slice(0, 10).forEach(em => {
+    const b = document.createElement('button'); b.className = 'obj-btn obj-btn-em';
+    b.title = em;
     b.innerHTML = `<span class="ob-ic">${em}</span>`;
     b.onclick = () => addGiantEmoji(em);
     eg.appendChild(b);
   });
 
-  // Rage faces
+  // Rage faces — 5 per row, icon-only
   const rg = el2('rage-grid');
+  rg.style.gridTemplateColumns = 'repeat(5,1fr)';
+  rg.style.gap = '3px';
   RAGE_FACES.forEach(rf => {
-    const b = document.createElement('button'); b.className = 'obj-btn';
-    b.innerHTML = `<span class="ob-ic">${rf.t}</span><span style="font-size:9px">${rf.l.split(' ')[1]}</span>`;
+    const b = document.createElement('button'); b.className = 'obj-btn obj-btn-em';
+    b.title = rf.l;
+    b.innerHTML = `<span class="ob-ic">${rf.t}</span>`;
     b.onclick = () => addGiantEmoji(rf.t, 120);
     rg.appendChild(b);
   });
@@ -33,13 +39,6 @@ function buildObjectsPanel() {
     cfx.appendChild(b);
   });
 
-  // Frames — single button, editing in right panel
-  const fr = el2('frame-grid');
-  const fb = document.createElement('button'); fb.className = 'obj-btn';
-  fb.style.gridColumn = '1/-1';
-  fb.innerHTML = `<span class="ob-ic">🖼</span><span>Adicionar Moldura</span>`;
-  fb.onclick = () => addFrame();
-  fr.appendChild(fb);
 }
 
 // ─ Text ───────────────────────────────────────────────
@@ -270,7 +269,7 @@ function toggleDrawMode() {
     btn.style.borderColor = '#7c3aed';
     btn.style.color       = '#c4b5fd';
     icon.textContent      = '⏹';
-    label.textContent     = 'Parar pincel';
+    label.textContent     = 'Parar';
     ctrl.style.display    = 'block';
     updateBrush();
     canvas.discardActiveObject();
@@ -280,7 +279,7 @@ function toggleDrawMode() {
     btn.style.borderColor = '';
     btn.style.color       = '';
     icon.textContent      = '✏';
-    label.textContent     = 'Pincel livre';
+    label.textContent     = 'Pincel';
     ctrl.style.display    = 'none';
   }
 }

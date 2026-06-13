@@ -35,65 +35,45 @@
       <div style="font-size:10px;color:#52525b;margin-top:5px;text-align:center">Ctrl+V para colar • máx. 3 imagens</div>
     </div>
 
-    <!-- Text -->
-    <div class="s-sec">
-      <div class="s-ttl">Texto</div>
-      <button class="add-text-btn" onclick="addText()">＋ Adicionar Texto</button>
-      <div class="kbd-h"><kbd>Ctrl+B</kbd> negrito &nbsp;<kbd>Ctrl+I</kbd> itálico &nbsp;<kbd>Del</kbd> remove</div>
-    </div>
-
-    <!-- Objects -->
+    <!-- Objects (includes text, draw, frame) -->
     <div class="s-sec">
       <div class="s-ttl">Objetos</div>
 
       <div class="obj-grid">
+        <button class="obj-btn" onclick="addText()"><span class="ob-ic" style="font-size:18px;font-weight:900;font-family:Georgia,serif">T</span>Texto</button>
         <button class="obj-btn" onclick="addShape('circle')"><span class="ob-ic">🔴</span>Círculo</button>
         <button class="obj-btn" onclick="addShape('arrow')"><span class="ob-ic">→</span>Seta</button>
         <button class="obj-btn" onclick="addShape('arrowcurve')"><span class="ob-ic">↷</span>S. Curva</button>
         <button class="obj-btn" onclick="addShape('rect')"><span class="ob-ic">🟥</span>Retângulo</button>
         <button class="obj-btn" onclick="addShape('line')"><span class="ob-ic">📏</span>Linha</button>
+        <button id="draw-toggle-btn" class="obj-btn" style="transition:background .12s,border-color .12s,color .12s" onclick="toggleDrawMode()"><span class="ob-ic" id="draw-icon">✏</span><span id="draw-label">Pincel</span></button>
+        <button class="obj-btn" onclick="addFrame()"><span class="ob-ic">🖼</span>Moldura</button>
+      </div>
+
+      <!-- Draw controls – visible only when draw mode is active -->
+      <div id="draw-controls" style="display:none;margin-top:6px;padding:7px 8px;background:#1c1c1e;border-radius:6px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+          <input type="color" id="draw-color" value="#ff0000" title="Cor"
+            style="width:26px;height:22px;border:none;background:none;cursor:pointer;border-radius:3px;padding:1px;flex-shrink:0"
+            onchange="updateBrush()">
+          <span style="font-size:10px;color:#71717a">Cor</span>
+          <input type="range" id="draw-size" min="2" max="80" value="12" style="flex:1;accent-color:#7c3aed"
+            oninput="updateBrush();document.getElementById('draw-size-lbl').textContent=this.value+'px'">
+          <span id="draw-size-lbl" style="font-size:10px;color:#71717a;width:26px;text-align:right">12px</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="checkbox" id="draw-outline" style="accent-color:#7c3aed">
+          <span style="font-size:10px;color:#71717a">Outline</span>
+          <input type="color" id="draw-outline-color" value="#000000"
+            style="width:22px;height:18px;border:none;background:none;cursor:pointer;border-radius:3px;padding:1px">
+          <span style="font-size:10px;color:#3f3f46;margin-left:auto">Esc para sair</span>
+        </div>
       </div>
 
       <div class="obj-grid" id="emoji-grid"></div>
       <div class="obj-grid" id="rage-grid"></div>
-
       <div class="obj-grid" id="canvas-fx-grid"></div>
 
-      <div class="obj-grid" id="frame-grid"></div>
-    </div>
-
-    <!-- Freehand Draw -->
-    <div class="s-sec">
-      <div class="s-ttl">Pincel livre</div>
-      <div class="obj-grid">
-        <button id="draw-toggle-btn" class="obj-btn" style="grid-column:1/-1;transition:background .12s,border-color .12s,color .12s" onclick="toggleDrawMode()">
-          <span class="ob-ic" id="draw-icon">✏</span>
-          <span id="draw-label">Pincel livre</span>
-        </button>
-      </div>
-      <div id="draw-controls" style="display:none;margin-top:8px">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-          <input type="color" id="draw-color" value="#ff0000" title="Cor do pincel"
-            style="width:34px;height:28px;border:none;background:none;cursor:pointer;border-radius:4px;padding:1px;flex-shrink:0"
-            onchange="updateBrush()">
-          <span style="font-size:11px;color:#a1a1aa">Cor</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <input type="range" id="draw-size" min="2" max="80" value="12"
-            style="flex:1;accent-color:#7c3aed"
-            oninput="updateBrush();document.getElementById('draw-size-lbl').textContent=this.value+'px'">
-          <span id="draw-size-lbl" style="font-size:11px;color:#a1a1aa;width:30px;text-align:right">12px</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
-          <label style="display:flex;align-items:center;gap:5px;cursor:pointer">
-            <input type="checkbox" id="draw-outline" style="accent-color:#7c3aed">
-            <span style="font-size:11px;color:#a1a1aa">Outline</span>
-          </label>
-          <input type="color" id="draw-outline-color" value="#000000" title="Cor do outline"
-            style="width:28px;height:22px;border:none;background:none;cursor:pointer;border-radius:3px;padding:1px">
-        </div>
-        <div style="font-size:10px;color:#52525b;margin-top:6px">Esc para sair • Del para apagar selecionado</div>
-      </div>
     </div>
 
   </div><!-- /sidebar -->
