@@ -3,83 +3,58 @@
 // OBJECTS: SHAPES · EMOJIS · BADGES · CANVAS FX · FRAMES · TEXT
 // ═══════════════════════════════════════════════════════
 
-// ─ Custom per-layer Fabric.js filters ─────────────────
-(function() {
-  fabric.Image.filters.MotionBlurLayer = fabric.util.createClass(fabric.Image.filters.BaseFilter, {
-    type: 'MotionBlurLayer',
-    applyTo2d: function(opts) {
-      const src = new Uint8ClampedArray(opts.imageData.data);
-      const d = opts.imageData.data, w = opts.imageData.width, h = opts.imageData.height, k = 9, hk = 4;
-      for (let y = 0; y < h; y++) {
-        for (let x = 0; x < w; x++) {
-          let r=0,g=0,b=0,a=0;
-          for (let kx=-hk; kx<=hk; kx++) {
-            const sx = Math.max(0, Math.min(w-1, x+kx)), i=(y*w+sx)*4;
-            r+=src[i]; g+=src[i+1]; b+=src[i+2]; a+=src[i+3];
-          }
-          const i=(y*w+x)*4; d[i]=r/k|0; d[i+1]=g/k|0; d[i+2]=b/k|0; d[i+3]=a/k|0;
-        }
+// ─ Canvas FX mini-preview renderer ────────────────────
+function _makeCanvasFxPreview(fn) {
+  const c=document.createElement('canvas'); c.width=72; c.height=40;
+  const ctx=c.getContext('2d');
+  ctx.fillStyle='#1a1a28'; ctx.fillRect(0,0,72,40);
+  switch(fn) {
+    case 'addSpeedLines': {
+      const cx=36,cy=20;
+      for(let i=0;i<24;i++){
+        const a=(i/24)*Math.PI*2, r0=7, r1=38+Math.random()*8;
+        ctx.strokeStyle=`rgba(255,255,255,${(.25+Math.random()*.55).toFixed(2)})`;
+        ctx.lineWidth=.5+Math.random()*1.5;
+        ctx.beginPath(); ctx.moveTo(cx+Math.cos(a)*r0,cy+Math.sin(a)*r0); ctx.lineTo(cx+Math.cos(a)*r1,cy+Math.sin(a)*r1); ctx.stroke();
       }
-    },
-    isNeutralState: function(){return false;},
-    toObject: function(){return {type:this.type};}
-  });
-  fabric.Image.filters.MotionBlurLayer.fromObject = function(){return new fabric.Image.filters.MotionBlurLayer();};
-
-  fabric.Image.filters.OldPaperLayer = fabric.util.createClass(fabric.Image.filters.BaseFilter, {
-    type: 'OldPaperLayer',
-    applyTo2d: function(opts) {
-      const d = opts.imageData.data, w = opts.imageData.width, h = opts.imageData.height;
-      for (let y=0; y<h; y++) {
-        for (let x=0; x<w; x++) {
-          const i=(y*w+x)*4, r=d[i], g=d[i+1], b=d[i+2], n=(Math.random()-.5)*50;
-          d[i]  =Math.min(255,Math.max(0,r*.393+g*.769+b*.189+n));
-          d[i+1]=Math.min(255,Math.max(0,r*.349+g*.686+b*.168+n));
-          d[i+2]=Math.min(255,Math.max(0,r*.272+g*.534+b*.131+n));
-        }
+      break;
+    }
+    case 'addImpactBurst': {
+      const cx=36,cy=20;
+      const g=ctx.createRadialGradient(cx,cy,0,cx,cy,28);
+      g.addColorStop(0,'rgba(255,220,50,.9)'); g.addColorStop(.35,'rgba(255,120,0,.5)'); g.addColorStop(1,'rgba(255,50,0,0)');
+      ctx.fillStyle=g; ctx.fillRect(0,0,72,40);
+      for(let i=0;i<12;i++){
+        const a=(i/12)*Math.PI*2, a2=a+.22;
+        ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+Math.cos(a)*55,cy+Math.sin(a)*55); ctx.lineTo(cx+Math.cos(a2)*55,cy+Math.sin(a2)*55); ctx.closePath();
+        ctx.fillStyle='rgba(255,200,0,.1)'; ctx.fill();
       }
-    },
-    isNeutralState: function(){return false;},
-    toObject: function(){return {type:this.type};}
-  });
-  fabric.Image.filters.OldPaperLayer.fromObject = function(){return new fabric.Image.filters.OldPaperLayer();};
-
-  fabric.Image.filters.ScanlineLayer = fabric.util.createClass(fabric.Image.filters.BaseFilter, {
-    type: 'ScanlineLayer',
-    applyTo2d: function(opts) {
-      const d = opts.imageData.data, w = opts.imageData.width, h = opts.imageData.height;
-      for (let y=0; y<h; y++) {
-        if (y%4<2) continue;
-        for (let x=0; x<w; x++) {
-          const i=(y*w+x)*4; d[i]=d[i]*.45|0; d[i+1]=d[i+1]*.45|0; d[i+2]=d[i+2]*.45|0;
-        }
+      break;
+    }
+    case 'addLightBurst': {
+      const g=ctx.createRadialGradient(36,20,0,36,20,34);
+      g.addColorStop(0,'rgba(255,255,200,.95)'); g.addColorStop(.3,'rgba(255,255,80,.55)'); g.addColorStop(1,'rgba(255,255,0,0)');
+      ctx.fillStyle=g; ctx.fillRect(0,0,72,40); break;
+    }
+    case 'addLateralLight': {
+      const g=ctx.createLinearGradient(0,0,72,0);
+      g.addColorStop(0,'rgba(255,220,100,.85)'); g.addColorStop(.4,'rgba(255,200,80,.25)'); g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=g; ctx.fillRect(0,0,72,40); break;
+    }
+    case 'addRain':
+      ctx.strokeStyle='rgba(150,210,255,.65)'; ctx.lineWidth=.8;
+      for(let i=0;i<45;i++){ const x=Math.random()*72,y=Math.random()*40; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x-4,y+11); ctx.stroke(); }
+      break;
+    case 'addParticles':
+      for(let i=0;i<55;i++){
+        const x=Math.random()*72,y=Math.random()*40,r=.8+Math.random()*2.5;
+        ctx.fillStyle=`rgba(255,${140+Math.random()*115|0},50,${(.2+Math.random()*.7).toFixed(2)})`;
+        ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
       }
-    },
-    isNeutralState: function(){return false;},
-    toObject: function(){return {type:this.type};}
-  });
-  fabric.Image.filters.ScanlineLayer.fromObject = function(){return new fabric.Image.filters.ScanlineLayer();};
-
-  fabric.Image.filters.VignetteLayer = fabric.util.createClass(fabric.Image.filters.BaseFilter, {
-    type: 'VignetteLayer',
-    applyTo2d: function(opts) {
-      const d = opts.imageData.data, w = opts.imageData.width, h = opts.imageData.height;
-      const cx=w/2, cy=h/2, maxR2=cx*cx+cy*cy, thr=.55*.55;
-      for (let y=0; y<h; y++) {
-        const dy2=(y-cy)*(y-cy);
-        for (let x=0; x<w; x++) {
-          const r2=((x-cx)*(x-cx)+dy2)/maxR2;
-          if (r2<=thr) continue;
-          const r=Math.sqrt(r2), f=Math.max(0,1-Math.pow((r-.55)*2.22,1.8)*.9);
-          const i=(y*w+x)*4; d[i]=d[i]*f|0; d[i+1]=d[i+1]*f|0; d[i+2]=d[i+2]*f|0;
-        }
-      }
-    },
-    isNeutralState: function(){return false;},
-    toObject: function(){return {type:this.type};}
-  });
-  fabric.Image.filters.VignetteLayer.fromObject = function(){return new fabric.Image.filters.VignetteLayer();};
-})();
+      break;
+  }
+  return c;
+}
 
 // ─ Objects panel builder ──────────────────────────────
 function buildObjectsPanel() {
@@ -100,25 +75,30 @@ function buildObjectsPanel() {
     b.onclick = () => addGiantEmoji(rf.t, 120); rg.appendChild(b);
   });
 
+  // Canvas FX — 2 per row, preview + label
   const cfx = el2('canvas-fx-grid');
-  cfx.style.gridTemplateColumns = 'repeat(5,1fr)'; cfx.style.gap = '3px';
+  cfx.style.gridTemplateColumns = 'repeat(2,1fr)'; cfx.style.gap = '4px';
   CANVAS_FX.forEach(fx => {
-    const b = document.createElement('button'); b.className = 'obj-btn obj-btn-em';
-    b.title = fx.l; b.innerHTML = `<span class="ob-ic" style="font-size:16px">&#10024;</span>`;
+    const b = document.createElement('button'); b.className = 'lfx-preview-btn'; b.title = fx.l;
+    b.style.cssText = 'background:#1c1c1e;border:1px solid #3f3f46';
+    const prev = _makeCanvasFxPreview(fx.fn);
+    prev.style.cssText = 'width:100%;height:auto;display:block;border-radius:3px;pointer-events:none;background:#1a1a28';
+    const lbl = document.createElement('span'); lbl.textContent = fx.l;
+    lbl.style.cssText = 'font-size:9px;color:#e4e4e7;text-align:center;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block';
+    b.appendChild(prev); b.appendChild(lbl);
     b.onclick = () => window[fx.fn] && window[fx.fn](); cfx.appendChild(b);
   });
 
+  // Layer FX — icon-only, 4 per row
   const lfx = el2('layer-fx-grid');
   if (lfx) {
-    lfx.style.gridTemplateColumns = 'repeat(2,1fr)'; lfx.style.gap = '4px';
+    lfx.style.display = 'grid';
+    lfx.style.gridTemplateColumns = 'repeat(4,1fr)'; lfx.style.gap = '3px';
     LAYER_FX.forEach(fx => {
-      const b = document.createElement('button');
-      b.className = 'lfx-preview-btn'; b.id = 'lfx-' + fx.key; b.title = fx.l;
-      const prev = _makeLfxPreview(fx.key);
-      prev.style.cssText = 'width:100%;height:auto;display:block;border-radius:3px;pointer-events:none';
-      const lbl = document.createElement('span'); lbl.textContent = fx.l;
-      b.appendChild(prev); b.appendChild(lbl);
-      b.onclick = () => window[fx.fn]?.(); lfx.appendChild(b);
+      const b = document.createElement('button'); b.className = 'obj-btn obj-btn-em';
+      b.id = 'lfx-' + fx.key; b.title = fx.l;
+      b.innerHTML = `<span class="ob-ic" style="font-size:18px">${fx.ic}</span>`;
+      b.onclick = () => _toggleLayerFxSlider(fx.key); lfx.appendChild(b);
     });
   }
 }
@@ -288,72 +268,47 @@ function rebuildFrame(oldObj, style, color, thickness) {
   canvas.renderAll(); saveHist(); renderPropsPanel();
 }
 
-// ─ Layer FX (apply Fabric.js filters per layer) ───────
+// ─ Layer FX (toggle effectState sliders on all layers) ─
 const _layerFx = { motionblur:false, oldpaper:false, scanline:false, vignette:false };
-const _LAYER_FX_TYPES = { motionblur:'MotionBlurLayer', oldpaper:'OldPaperLayer', scanline:'ScanlineLayer', vignette:'VignetteLayer' };
+const _LFX_SLIDER = {
+  motionblur: { key:'motion_h',  val:0.7 },
+  oldpaper:   { key:'warm',      val:0.7 },
+  scanline:   { key:'scanlines', val:0.7 },
+  vignette:   { key:'vignette',  val:0.7 },
+};
 
-function _applyLayerFx(key, makeFilters) {
-  const objs = canvas.getObjects().filter(o => o.name==='layer' && o.filters);
-  if (!objs.length) { toast('Adicione camadas de imagem primeiro'); return; }
-  const btn = document.getElementById('lfx-'+key);
-  const isActive = !!_layerFx[key];
-  const types = makeFilters().map(f => f.type);
-  objs.forEach(obj => {
-    if (isActive) { obj.filters = obj.filters.filter(f => !types.includes(f.type)); }
-    else { obj.filters.push(...makeFilters()); }
-    obj.applyFilters();
+function _toggleLayerFxSlider(fxKey) {
+  const cfg = _LFX_SLIDER[fxKey];
+  if (!cfg) return;
+  if (!layers.length) { toast('Adicione camadas primeiro'); return; }
+  const btn = document.getElementById('lfx-'+fxKey);
+  const isActive = !!_layerFx[fxKey];
+  const newVal = isActive ? 0 : cfg.val;
+  layers.forEach(layer => {
+    if (!layer.effectState) return;
+    layer.effectState[cfg.key] = newVal;
+    rebuildFilters(layer);
   });
-  _layerFx[key] = !isActive;
+  _layerFx[fxKey] = !isActive;
   btn?.classList.toggle('lfx-active', !isActive);
-  canvas.renderAll(); saveHist();
+  // Refresh right panel slider if a layer is selected
+  const activeLy = layers.find(l => l.obj === canvas.getActiveObject());
+  if (activeLy) renderFxPanel(activeLy);
+  saveHist();
 }
 
 function syncLayerFxState() {
-  const objs = canvas.getObjects().filter(o => o.name==='layer' && o.filters?.length);
-  Object.entries(_LAYER_FX_TYPES).forEach(([key,ftype]) => {
-    const active = objs.some(o => o.filters.some(f => f.type===ftype));
+  Object.entries(_LFX_SLIDER).forEach(([key, cfg]) => {
+    const active = layers.some(l => l.effectState && (l.effectState[cfg.key] || 0) > 0.05);
     _layerFx[key] = active;
     document.getElementById('lfx-'+key)?.classList.toggle('lfx-active', active);
   });
 }
 
-function toggleMotionBlur() { _applyLayerFx('motionblur', ()=>[new fabric.Image.filters.MotionBlurLayer()]); }
-function toggleOldPaper()   { _applyLayerFx('oldpaper',   ()=>[new fabric.Image.filters.OldPaperLayer()]); }
-function toggleScanlines()  { _applyLayerFx('scanline',   ()=>[new fabric.Image.filters.ScanlineLayer()]); }
-function toggleVignette()   { _applyLayerFx('vignette',   ()=>[new fabric.Image.filters.VignetteLayer()]); }
-
-// ─ Layer FX mini-preview renderer ─────────────────────
-function _makeLfxPreview(key) {
-  const c=document.createElement('canvas'); c.width=72; c.height=40;
-  const ctx=c.getContext('2d');
-  const bg=ctx.createLinearGradient(0,0,72,40);
-  bg.addColorStop(0,'#2d2d3d'); bg.addColorStop(1,'#1a1a28');
-  ctx.fillStyle=bg; ctx.fillRect(0,0,72,40);
-  ctx.fillStyle='rgba(120,140,180,0.55)'; ctx.fillRect(14,8,44,24);
-  switch(key) {
-    case 'motionblur':
-      for (let i=0;i<12;i++){
-        const y=3+i*3.2, len=20+Math.random()*40, x=Math.random()*20, a=0.15+Math.random()*0.45;
-        const g2=ctx.createLinearGradient(x,y,x+len,y);
-        g2.addColorStop(0,'rgba(255,255,255,0)'); g2.addColorStop(0.5,`rgba(255,255,255,${a})`); g2.addColorStop(1,'rgba(255,255,255,0)');
-        ctx.fillStyle=g2; ctx.fillRect(x,y-1,len,2);
-      }
-      break;
-    case 'oldpaper':
-      ctx.fillStyle='rgba(175,138,55,0.55)'; ctx.fillRect(0,0,72,40);
-      for (let i=0;i<300;i++){ ctx.fillStyle=`rgba(0,0,0,${Math.random()*.18})`; ctx.fillRect(Math.random()*72,Math.random()*40,1,1); }
-      break;
-    case 'scanline':
-      for (let y=0;y<40;y+=4){ ctx.fillStyle='rgba(0,0,0,0.5)'; ctx.fillRect(0,y+2,72,2); }
-      break;
-    case 'vignette': {
-      const vg=ctx.createRadialGradient(36,20,7,36,20,38);
-      vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(0.55,'rgba(0,0,0,0)'); vg.addColorStop(1,'rgba(0,0,0,0.88)');
-      ctx.fillStyle=vg; ctx.fillRect(0,0,72,40); break;
-    }
-  }
-  return c;
-}
+function toggleMotionBlur() { _toggleLayerFxSlider('motionblur'); }
+function toggleOldPaper()   { _toggleLayerFxSlider('oldpaper'); }
+function toggleScanlines()  { _toggleLayerFxSlider('scanline'); }
+function toggleVignette()   { _toggleLayerFxSlider('vignette'); }
 
 // ─ Freehand drawing ───────────────────────────────────
 let _drawActive = false;

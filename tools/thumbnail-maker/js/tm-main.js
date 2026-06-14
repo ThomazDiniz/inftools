@@ -12,7 +12,6 @@ function init() {
   initBorderOverlay();
 
   buildFormatTabs();
-  buildFormatList();
   buildObjectsPanel();
   renderBgPanel();
 
@@ -20,19 +19,9 @@ function init() {
   initPaste();
   initKeyboard();
 
-  // Export + format settings
+  // Export
   el2('btn-export').onclick        = exportAll;
   el2('btn-export-single').onclick = exportSingle;
-  el2('fmt-cfg-btn').onclick = e => {
-    e.stopPropagation();
-    el2('fmt-cfg-pop').classList.toggle('open');
-  };
-  document.addEventListener('click', e => {
-    const pop = el2('fmt-cfg-pop');
-    if (pop && !pop.contains(e.target) && e.target !== el2('fmt-cfg-btn')) {
-      pop.classList.remove('open');
-    }
-  });
 
   renderLayerPanel();
   saveHist();

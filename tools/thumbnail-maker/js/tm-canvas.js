@@ -238,14 +238,24 @@ function _fmtGroups() {
   });
 }
 
+const _FMT_IC = {
+  youtube:   { ic:'▶', c:'#ff4444' },
+  instagram: { ic:'◉', c:'#e1306c' },
+  reels:     { ic:'♪', c:'#a855f7' },
+  twitter:   { ic:'𝕏', c:'#71717a' },
+  linkedin:  { ic:'in', c:'#0a66c2' },
+  pinterest: { ic:'P', c:'#e60023' },
+};
+
 function buildFormatTabs() {
   const c = el2('fmt-tabs');
   FORMATS.forEach((f, i) => {
+    const ic = _FMT_IC[f.id] || { ic:'◆', c:'#a1a1aa' };
     const b = document.createElement('button');
     b.className = 'fmt-tab' + (i === 0 ? ' active' : '');
     b.dataset.id = f.id;
     b.style.lineHeight = '1.2';
-    b.innerHTML = `<span>${f.name}</span><br><span style="font-size:9px;opacity:0.65">${f.w}×${f.h}</span>`;
+    b.innerHTML = `<span style="color:${ic.c};font-size:10px;font-weight:700">${ic.ic}</span> <span>${f.name}</span><br><span style="font-size:9px;opacity:0.55">${f.w}×${f.h}</span>`;
     b.onclick = () => {
       activeFmt = f;
       document.querySelectorAll('.fmt-tab').forEach(t => t.classList.toggle('active', t.dataset.id === f.id));

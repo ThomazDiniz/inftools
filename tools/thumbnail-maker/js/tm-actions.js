@@ -147,15 +147,13 @@ function restoreHist() {
 
 // ─ Export ─────────────────────────────────────────────
 async function exportAll() {
-  // Deduplicate: skip formats that share an identical resolution with one already queued
+  // Deduplicate: skip formats that share an identical resolution
   const seen = new Set();
   const fmts = FORMATS.filter(f => {
-    if (!f.on) return false;
     const key = `${f.w}x${f.h}`;
     if (seen.has(key)) return false;
     seen.add(key); return true;
   });
-  if (!fmts.length) { toast('Selecione pelo menos um formato!'); return; }
   showLoad(`Gerando ${fmts.length} variação${fmts.length > 1 ? 's' : ''}…`);
   try {
     const zip = new JSZip();
