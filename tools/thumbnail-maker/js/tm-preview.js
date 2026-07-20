@@ -10,31 +10,198 @@ let _ytNeighbors = [];   // vídeos aleatórios ao redor do seu
 let _ytPos = { home: 5, watch: 2, mobile: 0 };  // posição (aleatória) do seu vídeo em cada tela
 const NEIGHBOR_COUNT = 15;
 
-// ─ Dados aleatórios para os vídeos vizinhos ───────────
-const RANDOM_TITLES = [
+// ─ Dados de títulos ───────────────────────────────────
+// Títulos genéricos que despertam curiosidade — categoria "geral".
+const CURATED_GERAL = [
+  // Testes / experimentos
   'EU TESTEI por 30 DIAS e o resultado me CHOCOU',
+  'Testei ISSO por 1 SEMANA e não esperava o final',
+  'Passei 24 HORAS fazendo isso SEM PARAR',
+  'Fiz ISSO todo dia por 1 MÊS — olha no que deu',
+  'Tentei por 7 dias e o resultado foi SURREAL',
+  'Testei o MÉTODO que TODO MUNDO recomenda (funciona?)',
+  'Deixei os EXPERTS decidirem por mim durante 1 dia',
+  'Segui esse RITUAL por 21 dias e mudou TUDO',
+  'Vivi como RICO por 24 horas com R$ 50',
+  'Troquei ISSO por AQUILO durante uma semana inteira',
+  // Erros / avisos
   'O MAIOR ERRO que você comete SEM PERCEBER',
-  'A VERDADE que ninguém te conta sobre isso',
-  'Por que TODO MUNDO está falando disso agora?',
-  'Comprei o MAIS BARATO vs o MAIS CARO',
-  '10 SEGREDOS que mudaram a minha vida',
-  'ISSO vai ACABAR em 2026? (URGENTE)',
-  'Tentei por 7 dias e olha no que deu...',
+  'PARE de fazer ISSO agora mesmo',
   'NUNCA faça ISSO com o seu dinheiro',
-  'A RECEITA que viralizou na internet inteira',
-  'Ele NÃO esperava por essa reação',
-  'Como eu FIZ isso do ZERO em 24 HORAS',
-  'O FIM de uma era... chegou a hora do adeus',
-  'Reagindo aos MEUS vídeos mais ANTIGOS',
   'Você provavelmente está fazendo TUDO ERRADO',
-  'Gastei R$ 10.000 nisso... valeu a pena?',
+  '5 ERROS que estão te sabotando (e você nem sabe)',
+  'Se você faz ISSO, PRECISA parar hoje',
+  'O erro que 90% das pessoas cometem TODO DIA',
+  'Isso pode estar ARRUINANDO seus resultados',
+  'Ninguém te avisou sobre ISSO... até agora',
+  'CUIDADO: quase ninguém percebe esse detalhe',
+  // Verdade / segredos
+  'A VERDADE que ninguém te conta sobre isso',
+  'O SEGREDO que os profissionais ESCONDEM',
+  'Descobri o que ninguém queria que eu soubesse',
+  'A REAL por trás disso vai te SURPREENDER',
+  'O que NINGUÉM te fala sobre esse assunto',
+  'Eles não queriam que esse vídeo existisse',
+  'O lado ESCONDIDO que quase ninguém conhece',
+  'A verdade INCONVENIENTE sobre tudo isso',
+  'O que acontece nos BASTIDORES (chocante)',
+  'Revelando o SEGREDO que mudou o jogo',
+  // Perguntas / curiosidade
+  'Por que TODO MUNDO está falando disso agora?',
+  'Por que ninguém faz ISSO ainda?',
+  'O que acontece quando você faz ISSO?',
+  'Será que VALE A PENA mesmo? (a verdade)',
+  'Isso vai FUNCIONAR? Eu descobri na prática',
+  'Você sabia DISSO? Aposto que não',
+  'E se eu te dissesse que estava TUDO errado?',
+  'Como isso é possível?! Eu fiquei chocado',
+  'O que tem DENTRO disso vai te assustar',
+  'Por que isso está DESAPARECENDO?',
+  // Números / listas
+  '10 SEGREDOS que mudaram a minha vida',
+  '7 COISAS que eu queria saber ANTES',
+  '5 truques SIMPLES que fazem TODA diferença',
+  '3 SINAIS de que você está no caminho errado',
+  '9 HÁBITOS que estão te segurando',
+  '6 coisas que NINGUÉM te ensina',
+  '4 erros que quase acabaram comigo',
+  '15 minutos que vão MUDAR o seu dia',
+  '8 verdades que demorei ANOS pra entender',
+  '20 dicas em 10 minutos (salve esse vídeo)',
+  // Comparações / versus
+  'Comprei o MAIS BARATO vs o MAIS CARO',
+  'BARATO x CARO: será que compensa?',
+  'O ORIGINAL vs a IMITAÇÃO (surpreendente)',
+  'Antes x DEPOIS: a transformação COMPLETA',
+  'O melhor vs o PIOR — o resultado surpreende',
+  'Fiz em CASA e ficou MELHOR que o comprado',
+  'R$ 10 vs R$ 1.000 — dá pra notar a diferença?',
+  'Novo vs USADO: qual realmente vale a pena?',
+  'O jeito FÁCIL vs o jeito CERTO',
+  'Testei os dois pra você não errar',
+  // Transformação / história pessoal
+  'Como eu FIZ isso do ZERO em 24 HORAS',
+  'A DECISÃO que mudou tudo pra sempre',
+  'De ZERO ao TOPO em tempo recorde',
+  'Isso mudou COMPLETAMENTE a minha rotina',
   'A coisa MAIS ESTRANHA que já me aconteceu',
   'Ninguém acreditou quando eu mostrei ISSO',
-  'O SEGREDO que os profissionais escondem',
-  'Fiz em CASA e ficou MELHOR que o original',
-  'Passei 24h fazendo ISSO sem parar',
-  'A DECISÃO que mudou tudo pra sempre',
+  'Eu não esperava por essa REVIRAVOLTA',
+  'O dia em que TUDO deu errado (e deu certo)',
+  'Como saí do ZERO sem gastar quase nada',
+  'A transformação que ninguém viu chegando',
+  // Dinheiro / valor
+  'Gastei R$ 10.000 nisso... valeu a pena?',
+  'Quanto CUSTA de verdade? A conta CHOCOU',
+  'Ganhei dinheiro fazendo ISSO (passo a passo)',
+  'O investimento que TODO MUNDO ignora',
+  'Fiz isso de GRAÇA e economizei uma FORTUNA',
+  'O erro que me custou CARO demais',
+  'Como economizar sem PERCEBER que economizou',
+  'Isso paga por si só em POUCOS dias',
+  // Urgência / novidade
+  'ISSO vai ACABAR em 2026? (URGENTE)',
+  'A novidade que ninguém está vendo AINDA',
+  'Corre porque isso vai MUDAR tudo',
+  'O FIM de uma era... chegou a hora do adeus',
+  'Aconteceu o que ninguém esperava',
+  'Isso mudou da noite pro dia (e você nem viu)',
+  'A tendência que vai DOMINAR este ano',
+  // Reações / desafios
+  'Reagindo aos MEUS vídeos mais ANTIGOS',
+  'Aceitei o desafio IMPOSSÍVEL (spoiler: caos)',
+  'Deixei um ESTRANHO escolher por mim',
+  'Tentando fazer isso com OS OLHOS FECHADOS',
+  'Fiz o que me disseram pra NUNCA fazer',
+  'A internet me DESAFIOU e eu aceitei',
+  'Coloquei à prova a teoria mais LOUCA',
+  'Recriando o VIRAL que travou a internet',
+  // Genéricos fortes
+  'Isso é BOM DEMAIS pra ser verdade?',
+  'Você NUNCA mais vai ver isso do mesmo jeito',
+  'Prepare-se: isso vai te SURPREENDER',
+  'O vídeo que eu queria ter visto ANTES',
+  'Assista até o FINAL (não acredita no que vem)',
+  'A coisa mais útil que você vai ver hoje',
+  'Simples assim? Eu também não acreditei',
+  'Guarde esse vídeo, você vai PRECISAR dele',
 ];
+
+// ── Categorias ─────────────────────────────────────────
+const TITLE_CATS = [
+  { id:'geral',     label:'Genérico',    emoji:'✨' },
+  { id:'fitness',   label:'Fitness',     emoji:'💪' },
+  { id:'prog',      label:'Programação', emoji:'💻' },
+  { id:'gaming',    label:'Gaming',      emoji:'🎮' },
+  { id:'culinaria', label:'Culinária',   emoji:'🍳' },
+  { id:'financas',  label:'Finanças',    emoji:'💰' },
+  { id:'beleza',    label:'Beleza',      emoji:'💄' },
+  { id:'tech',      label:'Tecnologia',  emoji:'📱' },
+  { id:'estudos',   label:'Estudos',     emoji:'📚' },
+  { id:'negocios',  label:'Negócios',    emoji:'📈' },
+  { id:'viagem',    label:'Viagem',      emoji:'✈️' },
+  { id:'auto',      label:'Carros',      emoji:'🚗' },
+  { id:'diy',       label:'Casa & DIY',  emoji:'🔨' },
+];
+
+// Tópico (assunto) de cada nicho — usado pra gerar os títulos
+const TITLE_TOPICS = {
+  geral:     ['produtividade','disciplina','motivação','foco','organização','hábitos','autoconfiança','mentalidade','rotina matinal','gestão do tempo'],
+  fitness:   ['treino de pernas','hipertrofia','dieta cutting','jejum intermitente','ganho de massa','perda de gordura','treino em casa','creatina','abdômen definido','cardio','mobilidade','treino de peito'],
+  prog:      ['Python','React','JavaScript','SQL','Docker','Git','algoritmos','carreira dev','entrevista técnica','clean code','APIs REST','banco de dados'],
+  gaming:    ['Elden Ring','Valorant','Minecraft','GTA','League of Legends','CS2','Fortnite','builds secretas','a ranqueada','speedrun','setup gamer','mira no FPS'],
+  culinaria: ['bolo de cenoura','pão caseiro','massa fresca','frango suculento','marmita fit','café especial','churrasco','arroz soltinho','ovos perfeitos','pizza caseira','sobremesa fácil'],
+  financas:  ['investir do zero','renda fixa','ações','dividendos','sair das dívidas','reserva de emergência','Tesouro Direto','fundos imobiliários','juros compostos','economizar dinheiro','cartão de crédito','planejamento financeiro'],
+  beleza:    ['skincare','maquiagem natural','cabelo saudável','pele oleosa','protetor solar','automaquiagem','cuidados com a barba','rotina noturna','unhas'],
+  tech:      ['iPhone','celular Android','notebook barato','fones bluetooth','setup de trabalho','câmera do celular','bateria do celular','apps essenciais','privacidade online','casa inteligente'],
+  estudos:   ['passar no vestibular','o ENEM','estudar sozinho','memorização','concurso público','cronograma de estudos','foco nos estudos','fazer resumos','produtividade acadêmica'],
+  negocios:  ['começar um negócio','vender mais','marketing digital','tráfego pago','o primeiro cliente','gestão de tempo','precificação','networking','empreender do zero'],
+  viagem:    ['viajar barato','mochilão','passagem promocional','mala de mão','roteiro perfeito','viagem internacional','hospedagem barata'],
+  auto:      ['carro usado','economizar combustível','revisão do carro','carro elétrico','manutenção básica','o primeiro carro','cuidar dos pneus'],
+  diy:       ['organizar a casa','decorar gastando pouco','reforma barata','plantas em casa','reparos simples','marcenaria'],
+};
+
+// Moldes de título que incitam curiosidade ({x} = tópico)
+const TITLE_TEMPLATES = [
+  'a VERDADE sobre {x} que ninguém te conta',
+  'eu testei {x} por 30 DIAS — o resultado me CHOCOU',
+  'o MAIOR ERRO de quem começa com {x}',
+  'por que TODO MUNDO está errado sobre {x}?',
+  '{x}: o que ninguém te ensina no início',
+  '5 SEGREDOS de {x} que mudaram tudo',
+  'NUNCA faça ISSO com {x}',
+  'como dominar {x} partindo do ZERO',
+  'passei 7 dias focado SÓ em {x}',
+  'isso vai MUDAR como você vê {x}',
+  'o SEGREDO por trás de {x} que poucos conhecem',
+  '{x} em 10 minutos: o guia DEFINITIVO',
+  'fiz {x} do jeito ERRADO por ANOS',
+  'a tendência de {x} que vai EXPLODIR em 2026',
+  'parei de errar em {x} quando descobri ISSO',
+  '7 coisas sobre {x} que eu queria saber ANTES',
+  'ninguém te conta a REAL sobre {x}',
+  '{x} do jeito CERTO (a maioria erra feio)',
+];
+
+function _capFirst(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+function _catLabel(id) { const c = TITLE_CATS.find(c => c.id === id); return c ? c.label : id; }
+function _catEmoji(id) { const c = TITLE_CATS.find(c => c.id === id); return c ? c.emoji : ''; }
+
+// Gera TODOS os títulos: curados (geral) + combinações por categoria
+const TITLES = (function () {
+  const out = CURATED_GERAL.map(t => ({ t, cat: 'geral' }));
+  Object.keys(TITLE_TOPICS).forEach(cat => {
+    TITLE_TOPICS[cat].forEach(topic => {
+      TITLE_TEMPLATES.forEach(tpl => {
+        out.push({ t: _capFirst(tpl.replace(/\{x\}/g, topic)), cat });
+      });
+    });
+  });
+  return out;
+})();
+
+// Lista plana (usada pelos vídeos vizinhos do preview e pela sugestão)
+const RANDOM_TITLES = TITLES.map(x => x.t);
 
 const RANDOM_CHANNELS = [
   'Canal do Pedro', 'Tech Brasil', 'Vida Simples', 'Mundo Curioso',
@@ -96,6 +263,89 @@ function onTitleInput() {
 function getVideoTitle() {
   const v = (document.getElementById('video-title')?.value || '').trim();
   return v || 'Título do seu vídeo aparece aqui';
+}
+
+function _toast(msg) {
+  if (typeof toast === 'function') toast(msg);
+}
+
+// ─ Sugerir nome de vídeo ──────────────────────────────
+// Se houver um filtro de categoria ativo na lista, respeita ele.
+function suggestVideoName() {
+  const inp = document.getElementById('video-title');
+  if (!inp) return;
+  const pool = (_tlFilter === 'all') ? TITLES : TITLES.filter(x => x.cat === _tlFilter);
+  let item = _rand(pool);
+  for (let i = 0; i < 6 && item.t === inp.value; i++) item = _rand(pool);
+  inp.value = item.t;
+  onTitleInput();
+  _toast(`💡 ${_catEmoji(item.cat)} ${_catLabel(item.cat)}: título sugerido`);
+}
+
+// ─ Lista completa de títulos (com filtro por categoria) ─
+let _tlFilter = 'all';
+
+function openTitlesList() {
+  const ov = document.getElementById('tl-overlay');
+  if (!ov) return;
+  renderTlFilters();
+  renderTlList();
+  ov.classList.add('open');
+}
+
+function renderTlFilters() {
+  const wrap = document.getElementById('tl-filters');
+  if (!wrap) return;
+  let chips = `<button class="tl-chip${_tlFilter === 'all' ? ' active' : ''}" onclick="setTlFilter('all')">Todos <span class="tl-chip-n">${TITLES.length}</span></button>`;
+  chips += TITLE_CATS.map(c => {
+    const n = TITLES.filter(x => x.cat === c.id).length;
+    return `<button class="tl-chip${_tlFilter === c.id ? ' active' : ''}" onclick="setTlFilter('${c.id}')">${c.emoji} ${c.label} <span class="tl-chip-n">${n}</span></button>`;
+  }).join('');
+  wrap.innerHTML = chips;
+}
+
+function setTlFilter(cat) {
+  _tlFilter = cat;
+  renderTlFilters();
+  renderTlList();
+}
+
+function renderTlList() {
+  const list = document.getElementById('tl-list');
+  if (!list) return;
+  const items = (_tlFilter === 'all') ? TITLES : TITLES.filter(x => x.cat === _tlFilter);
+  const cnt = document.getElementById('tl-count');
+  if (cnt) cnt.textContent = items.length;
+  // ondblclick usa o título; o botão "Usar" (clique único) também usa
+  list.innerHTML = items.map(x => {
+    const t = _esc(x.t);
+    return `<div class="tl-item" title="Clique 2x para usar" data-t="${t}"
+        onclick="tlSelect(this)" ondblclick="useTitle(this.dataset.t)">
+        <span class="tl-item-txt">${t}</span>
+        ${_tlFilter === 'all' ? `<span class="tl-item-cat">${_catEmoji(x.cat)}</span>` : ''}
+        <button class="tl-item-use" onclick="event.stopPropagation();useTitle(this.parentNode.dataset.t)">Usar</button>
+      </div>`;
+  }).join('');
+}
+
+function tlSelect(el) {
+  document.querySelectorAll('.tl-item.sel').forEach(e => e.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function closeTitlesList() {
+  document.getElementById('tl-overlay')?.classList.remove('open');
+}
+
+function tlBackdropClick(e) {
+  if (e.target === document.getElementById('tl-overlay')) closeTitlesList();
+}
+
+function useTitle(t) {
+  const inp = document.getElementById('video-title');
+  if (inp) { inp.value = t; onTitleInput(); }
+  closeTitlesList();
+  _toast('✅ Título aplicado');
 }
 
 // ─ Abrir / fechar prévia ──────────────────────────────
@@ -269,7 +519,7 @@ function _esc(s) {
 
 // Fechar com Escape
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && document.getElementById('yt-overlay')?.classList.contains('open')) {
-    closeYtPreview();
-  }
+  if (e.key !== 'Escape') return;
+  if (document.getElementById('tl-overlay')?.classList.contains('open')) { closeTitlesList(); return; }
+  if (document.getElementById('yt-overlay')?.classList.contains('open')) { closeYtPreview(); }
 });

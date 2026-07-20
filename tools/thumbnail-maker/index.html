@@ -103,6 +103,8 @@
              placeholder="Digite o título do seu vídeo aqui…"
              oninput="onTitleInput()">
       <span class="title-count" id="title-count">0</span>
+      <button class="btn btn-g btn-sm" onclick="suggestVideoName()" title="Sugerir um título aleatório">💡 Sugerir nome</button>
+      <button class="btn btn-g btn-sm" onclick="openTitlesList()" title="Ver todos os títulos">📋 Ver lista</button>
       <button class="btn btn-p btn-sm" id="btn-yt-preview" onclick="openYtPreview()" title="Ver como fica no YouTube">▶ Ver no YouTube</button>
     </div>
   </div>
@@ -278,6 +280,18 @@
       <div class="ytx-main" id="yt-modal-body"></div>
     </div>
 
+  </div>
+</div>
+
+<!-- ╔═ LISTA DE TÍTULOS ═╗ -->
+<div class="tl-overlay" id="tl-overlay" onclick="tlBackdropClick(event)">
+  <div class="tl-modal">
+    <div class="tl-head">
+      <div class="tl-title">Sugestões de título <span class="tl-sub">(<span id="tl-count">0</span> ideias — clique 2x para usar)</span></div>
+      <button class="tl-close" onclick="closeTitlesList()">×</button>
+    </div>
+    <div class="tl-filters" id="tl-filters"></div>
+    <div class="tl-list" id="tl-list"></div>
   </div>
 </div>
 
