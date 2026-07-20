@@ -80,6 +80,91 @@ kbd{background:#3f3f46;border-radius:3px;padding:1px 4px;font-size:9px;font-fami
 .canvas-wrap.panning{cursor:grabbing}
 #canvas-holder{position:relative}
 
+/* ─ TITLE BAR (below canvas) ─ */
+.title-bar{background:#1f1f23;border-top:1px solid #374151;padding:7px 12px;display:flex;align-items:center;gap:10px;flex-shrink:0}
+.title-bar-lbl{font-size:10px;font-weight:600;color:#71717a;text-transform:uppercase;letter-spacing:.08em;white-space:nowrap;flex-shrink:0}
+.title-input{flex:1;min-width:0;background:#18181b;border:1px solid #3f3f46;border-radius:6px;color:#fafafa;padding:7px 10px;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .12s}
+.title-input:focus{border-color:#7c3aed}
+.title-input::placeholder{color:#52525b}
+.title-count{font-size:10px;color:#52525b;min-width:26px;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums}
+.title-count.warn{color:#f59e0b}
+.title-count.over{color:#ef4444}
+
+/* ─ YOUTUBE PREVIEW MODAL ─ */
+.yt-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(3px);z-index:9997;display:none;align-items:center;justify-content:center;padding:24px}
+.yt-overlay.open{display:flex}
+.yt-modal{background:#1c1c1f;border:1px solid #3f3f46;border-radius:14px;width:100%;max-width:920px;max-height:88vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.6)}
+.yt-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid #3f3f46;flex-shrink:0;flex-wrap:wrap}
+.yt-modal-title{font-size:14px;font-weight:600;color:#fafafa;white-space:nowrap}
+.yt-modal-controls{display:flex;align-items:center;gap:8px;margin-left:auto}
+.yt-seg{display:flex;gap:2px;background:#111114;border:1px solid #3f3f46;border-radius:8px;padding:2px}
+.yt-seg-btn{background:transparent;border:none;color:#a1a1aa;font-size:11px;font-weight:500;font-family:'Inter',sans-serif;padding:5px 10px;border-radius:6px;cursor:pointer;transition:all .12s;white-space:nowrap}
+.yt-seg-btn:hover{color:#fafafa}
+.yt-seg-btn.active{background:#7c3aed;color:#fff}
+.yt-theme-btn,.yt-close{background:#27272a;border:1px solid #3f3f46;color:#d4d4d8;width:32px;height:32px;border-radius:7px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0}
+.yt-theme-btn:hover,.yt-close:hover{background:#3f3f46;color:#fafafa}
+.yt-close{font-size:20px}
+.yt-modal-body{padding:26px;overflow-y:auto;display:flex;align-items:flex-start;justify-content:center;background:repeating-conic-gradient(#161619 0% 25%,#111114 0% 50%) 0 0/22px 22px}
+.yt-modal-body.light{background:repeating-conic-gradient(#ececec 0% 25%,#f9f9f9 0% 50%) 0 0/22px 22px}
+
+/* Shared card image */
+.yt-thumb{position:relative;width:100%;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:16/9}
+.yt-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.yt-thumb .yt-dur{position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.8);color:#fff;font-size:12px;font-weight:600;padding:1px 5px;border-radius:4px;line-height:1.4}
+
+.yt-avatar{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#7c3aed,#22c55e)}
+.yt-meta{min-width:0;flex:1}
+.yt-title{font-size:15px;font-weight:600;line-height:1.35;color:#0f0f0f;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
+.yt-sub{font-size:13px;color:#606060;margin-top:5px;line-height:1.4}
+.yt-sub .yt-ch{display:block}
+
+/* HOME grid (target card + neighbours) */
+.yt-home{display:grid;grid-template-columns:repeat(2,minmax(0,300px));gap:16px 16px;width:100%;justify-content:center}
+.yt-card{width:100%}
+.yt-card .yt-row{display:flex;gap:12px;margin-top:12px}
+.yt-card.ghost{opacity:.5}
+.yt-card.target .yt-thumb{box-shadow:0 0 0 3px #7c3aed}
+.yt-ghost-fill{width:100%;height:100%;background:#3a3a3a}
+.yt-modal-body.light .yt-ghost-fill{background:#d9d9d9}
+.yt-ghost-line{height:12px;border-radius:4px;background:#3a3a3a;margin-top:8px}
+.yt-modal-body.light .yt-ghost-line{background:#e0e0e0}
+
+/* RECOMMENDED sidebar */
+.yt-sidebar{width:410px;max-width:100%;display:flex;flex-direction:column;gap:8px}
+.yt-side-item{display:flex;gap:8px}
+.yt-side-item.target .yt-thumb{box-shadow:0 0 0 3px #7c3aed}
+.yt-side-item .yt-thumb{width:168px;flex-shrink:0;border-radius:8px}
+.yt-side-meta{min-width:0;flex:1;padding-top:1px}
+.yt-side-title{font-size:14px;font-weight:600;line-height:1.3;color:#0f0f0f;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
+.yt-side-sub{font-size:12px;color:#606060;margin-top:5px;line-height:1.4}
+.yt-side-item.ghost{opacity:.5}
+.yt-side-item.ghost .yt-ghost-line{margin-top:0}
+.yt-side-item.ghost .yt-ghost-line+.yt-ghost-line{margin-top:7px}
+
+/* MOBILE card */
+.yt-mobile{width:340px;max-width:100%;background:transparent}
+.yt-mobile-foot{display:flex;align-items:center;gap:10px;padding:10px 2px 0}
+.yt-mobile-foot .yt-avatar{width:24px;height:24px}
+.yt-mobile-foot .yt-mtitle{font-size:14px;font-weight:500;color:#0f0f0f;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;flex:1;min-width:0;word-break:break-word}
+.yt-mobile-foot .yt-msub{font-size:12px;color:#606060;margin-top:2px}
+.yt-dots{color:#606060;font-size:18px;flex-shrink:0;align-self:flex-start}
+
+/* Dark theme (YouTube dark) */
+.yt-modal-body:not(.light) .yt-title,
+.yt-modal-body:not(.light) .yt-side-title,
+.yt-modal-body:not(.light) .yt-mobile-foot .yt-mtitle{color:#f1f1f1}
+.yt-modal-body:not(.light) .yt-sub,
+.yt-modal-body:not(.light) .yt-side-sub,
+.yt-modal-body:not(.light) .yt-mobile-foot .yt-msub,
+.yt-modal-body:not(.light) .yt-dots{color:#aaa}
+
+.yt-empty-note{font-size:11px;color:#71717a;text-align:center;margin-top:16px;font-style:italic;width:100%}
+
+@media (max-width:680px){
+  .yt-home{grid-template-columns:minmax(0,300px)}
+  .yt-sidebar{width:340px}
+}
+
 /* ─ RIGHT PANEL ─ */
 .rp{width:252px;background:#27272a;border-left:1px solid #3f3f46;display:flex;flex-direction:column;flex-shrink:0}
 .rp-body{flex:1;overflow-y:auto;padding:12px}

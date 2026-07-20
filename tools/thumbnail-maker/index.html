@@ -95,6 +95,16 @@
         <canvas id="c"></canvas>
       </div>
     </div>
+
+    <!-- ╠═ TITLE BAR ═╣ -->
+    <div class="title-bar">
+      <span class="title-bar-lbl">Título do vídeo</span>
+      <input type="text" id="video-title" class="title-input" maxlength="100"
+             placeholder="Digite o título do seu vídeo aqui…"
+             oninput="onTitleInput()">
+      <span class="title-count" id="title-count">0</span>
+      <button class="btn btn-p btn-sm" id="btn-yt-preview" onclick="openYtPreview()" title="Ver como fica no YouTube">▶ Ver no YouTube</button>
+    </div>
   </div>
 
   <!-- ╠═ RIGHT PANEL ═╣ -->
@@ -221,6 +231,25 @@
 
 </div>
 
+<!-- ╔═ YOUTUBE PREVIEW ═╗ -->
+<div class="yt-overlay" id="yt-overlay" onclick="ytBackdropClick(event)">
+  <div class="yt-modal">
+    <div class="yt-modal-head">
+      <div class="yt-modal-title">Prévia no YouTube</div>
+      <div class="yt-modal-controls">
+        <div class="yt-seg" id="yt-view-seg">
+          <button class="yt-seg-btn active" data-view="home" onclick="setYtView('home')">🏠 Página inicial</button>
+          <button class="yt-seg-btn" data-view="sidebar" onclick="setYtView('sidebar')">📋 Recomendados</button>
+          <button class="yt-seg-btn" data-view="mobile" onclick="setYtView('mobile')">📱 Celular</button>
+        </div>
+        <button class="yt-theme-btn" id="yt-theme-btn" onclick="toggleYtTheme()" title="Alternar tema">🌙</button>
+        <button class="yt-close" onclick="closeYtPreview()">×</button>
+      </div>
+    </div>
+    <div class="yt-modal-body" id="yt-modal-body"></div>
+  </div>
+</div>
+
 <!-- Notifications -->
 <div class="toast" id="toast"></div>
 <div class="lov" id="lov">
@@ -298,6 +327,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeTips();
 <script src="js/tm-panels.js"></script>
 <script src="js/tm-backgrounds.js"></script>
 <script src="js/tm-actions.js"></script>
+<script src="js/tm-preview.js"></script>
 <script src="js/tm-main.js"></script>
 
 </body>
