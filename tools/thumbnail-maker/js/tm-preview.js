@@ -10,9 +10,9 @@ let _ytNeighbors = [];   // vídeos aleatórios ao redor do seu
 let _ytPos = { home: 5, watch: 2, mobile: 0 };  // posição (aleatória) do seu vídeo em cada tela
 const NEIGHBOR_COUNT = 15;
 
-// ─ Dados de títulos ───────────────────────────────────
-// Títulos genéricos que despertam curiosidade — categoria "geral".
-const CURATED_GERAL = [
+// ─ Dados de títulos (PT-BR + EN) ──────────────────────
+// Títulos PT genéricos que despertam curiosidade — categoria "geral".
+const CURATED_GERAL_PT = [
   // Testes / experimentos
   'EU TESTEI por 30 DIAS e o resultado me CHOCOU',
   'Testei ISSO por 1 SEMANA e não esperava o final',
@@ -127,25 +127,25 @@ const CURATED_GERAL = [
   'Guarde esse vídeo, você vai PRECISAR dele',
 ];
 
-// ── Categorias ─────────────────────────────────────────
+// ── Categorias (rótulos por idioma) ────────────────────
 const TITLE_CATS = [
-  { id:'geral',     label:'Genérico',    emoji:'✨' },
-  { id:'fitness',   label:'Fitness',     emoji:'💪' },
-  { id:'prog',      label:'Programação', emoji:'💻' },
-  { id:'gaming',    label:'Gaming',      emoji:'🎮' },
-  { id:'culinaria', label:'Culinária',   emoji:'🍳' },
-  { id:'financas',  label:'Finanças',    emoji:'💰' },
-  { id:'beleza',    label:'Beleza',      emoji:'💄' },
-  { id:'tech',      label:'Tecnologia',  emoji:'📱' },
-  { id:'estudos',   label:'Estudos',     emoji:'📚' },
-  { id:'negocios',  label:'Negócios',    emoji:'📈' },
-  { id:'viagem',    label:'Viagem',      emoji:'✈️' },
-  { id:'auto',      label:'Carros',      emoji:'🚗' },
-  { id:'diy',       label:'Casa & DIY',  emoji:'🔨' },
+  { id:'geral',     pt:'Genérico',    en:'Generic',     emoji:'✨' },
+  { id:'fitness',   pt:'Fitness',     en:'Fitness',     emoji:'💪' },
+  { id:'prog',      pt:'Programação', en:'Programming', emoji:'💻' },
+  { id:'gaming',    pt:'Gaming',      en:'Gaming',      emoji:'🎮' },
+  { id:'culinaria', pt:'Culinária',   en:'Cooking',     emoji:'🍳' },
+  { id:'financas',  pt:'Finanças',    en:'Finance',     emoji:'💰' },
+  { id:'beleza',    pt:'Beleza',      en:'Beauty',      emoji:'💄' },
+  { id:'tech',      pt:'Tecnologia',  en:'Tech',        emoji:'📱' },
+  { id:'estudos',   pt:'Estudos',     en:'Study',       emoji:'📚' },
+  { id:'negocios',  pt:'Negócios',    en:'Business',    emoji:'📈' },
+  { id:'viagem',    pt:'Viagem',      en:'Travel',      emoji:'✈️' },
+  { id:'auto',      pt:'Carros',      en:'Cars',        emoji:'🚗' },
+  { id:'diy',       pt:'Casa & DIY',  en:'Home & DIY',  emoji:'🔨' },
 ];
 
-// Tópico (assunto) de cada nicho — usado pra gerar os títulos
-const TITLE_TOPICS = {
+// ── PT: tópicos e moldes ───────────────────────────────
+const TITLE_TOPICS_PT = {
   geral:     ['produtividade','disciplina','motivação','foco','organização','hábitos','autoconfiança','mentalidade','rotina matinal','gestão do tempo'],
   fitness:   ['treino de pernas','hipertrofia','dieta cutting','jejum intermitente','ganho de massa','perda de gordura','treino em casa','creatina','abdômen definido','cardio','mobilidade','treino de peito'],
   prog:      ['Python','React','JavaScript','SQL','Docker','Git','algoritmos','carreira dev','entrevista técnica','clean code','APIs REST','banco de dados'],
@@ -161,8 +161,7 @@ const TITLE_TOPICS = {
   diy:       ['organizar a casa','decorar gastando pouco','reforma barata','plantas em casa','reparos simples','marcenaria'],
 };
 
-// Moldes de título que incitam curiosidade ({x} = tópico)
-const TITLE_TEMPLATES = [
+const TITLE_TEMPLATES_PT = [
   'a VERDADE sobre {x} que ninguém te conta',
   'eu testei {x} por 30 DIAS — o resultado me CHOCOU',
   'o MAIOR ERRO de quem começa com {x}',
@@ -183,25 +182,108 @@ const TITLE_TEMPLATES = [
   '{x} do jeito CERTO (a maioria erra feio)',
 ];
 
-function _capFirst(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-function _catLabel(id) { const c = TITLE_CATS.find(c => c.id === id); return c ? c.label : id; }
-function _catEmoji(id) { const c = TITLE_CATS.find(c => c.id === id); return c ? c.emoji : ''; }
+// ── EN: título curado, tópicos e moldes (nativo, não tradução) ──
+const CURATED_GERAL_EN = [
+  'I TRIED it for 30 DAYS and the result SHOCKED me',
+  'the BIGGEST mistake you make WITHOUT realizing it',
+  'the TRUTH nobody tells you about this',
+  'why is EVERYONE talking about this right now?',
+  'I bought the CHEAPEST vs the MOST EXPENSIVE',
+  '10 SECRETS that changed my life',
+  'is this ENDING in 2026? (URGENT)',
+  'I tried it for 7 days and WOW...',
+  'NEVER do THIS with your money',
+  'the recipe that went VIRAL everywhere',
+  'he did NOT expect that reaction',
+  'how I did it from ZERO in 24 HOURS',
+  'the END of an era... time to say goodbye',
+  'reacting to my OLDEST videos',
+  'you are probably doing it ALL WRONG',
+  'I spent $10,000 on this... was it worth it?',
+  'the STRANGEST thing that ever happened to me',
+  'nobody believed me until I showed THIS',
+  'the SECRET the pros are hiding',
+  'I made it at HOME and it beat the original',
+  'I spent 24h doing this NON-STOP',
+  'the DECISION that changed everything',
+  'STOP doing this right now',
+  '5 MISTAKES that are secretly sabotaging you',
+  'the thing NOBODY warns you about',
+  'watch until the END (you won\'t believe it)',
+  'save this video — you WILL need it',
+  'this is TOO GOOD to be true?',
+  'the video I WISH I had seen sooner',
+  'I did what they told me to NEVER do',
+  'the trend that will DOMINATE this year',
+  'what happens when you actually try THIS',
+  'the most useful thing you\'ll see today',
+  'I let a STRANGER decide for me',
+  'this changed how I see EVERYTHING',
+  '7 things I WISH I knew before',
+  'the hidden side almost nobody knows',
+  'they didn\'t want this video to exist',
+  'how is this even POSSIBLE?!',
+  'simple as that? I didn\'t believe it either',
+];
 
-// Gera TODOS os títulos: curados (geral) + combinações por categoria
-const TITLES = (function () {
-  const out = CURATED_GERAL.map(t => ({ t, cat: 'geral' }));
-  Object.keys(TITLE_TOPICS).forEach(cat => {
-    TITLE_TOPICS[cat].forEach(topic => {
-      TITLE_TEMPLATES.forEach(tpl => {
-        out.push({ t: _capFirst(tpl.replace(/\{x\}/g, topic)), cat });
-      });
+const TITLE_TOPICS_EN = {
+  geral:     ['productivity','discipline','motivation','focus','organization','habits','confidence','your mindset','a morning routine','time management'],
+  fitness:   ['leg day','muscle growth','a cutting diet','intermittent fasting','building mass','fat loss','home workouts','creatine','abs','cardio','mobility','chest day'],
+  prog:      ['Python','React','JavaScript','SQL','Docker','Git','algorithms','a dev career','coding interviews','clean code','REST APIs','databases'],
+  gaming:    ['Elden Ring','Valorant','Minecraft','GTA','League of Legends','CS2','Fortnite','secret builds','ranked','speedruns','a gaming setup','FPS aim'],
+  culinaria: ['carrot cake','homemade bread','fresh pasta','juicy chicken','meal prep','specialty coffee','BBQ','fluffy rice','perfect eggs','homemade pizza','easy desserts'],
+  financas:  ['investing from zero','fixed income','stocks','dividends','getting out of debt','an emergency fund','index funds','REITs','compound interest','saving money','credit cards','financial planning'],
+  beleza:    ['skincare','natural makeup','healthy hair','oily skin','sunscreen','doing your own makeup','beard care','a night routine','your nails'],
+  tech:      ['the iPhone','Android phones','a cheap laptop','bluetooth earbuds','a work setup','phone cameras','phone battery','must-have apps','online privacy','a smart home'],
+  estudos:   ['acing exams','the SAT','studying alone','memorization','standardized tests','a study schedule','study focus','taking notes','academic productivity'],
+  negocios:  ['starting a business','selling more','digital marketing','paid ads','your first client','time management','pricing','networking','building from zero'],
+  viagem:    ['traveling cheap','backpacking','cheap flights','carry-on packing','the perfect itinerary','international travel','cheap lodging'],
+  auto:      ['a used car','saving fuel','car maintenance','an electric car','basic upkeep','your first car','tire care'],
+  diy:       ['organizing your home','decorating on a budget','a cheap renovation','indoor plants','simple repairs','woodworking'],
+};
+
+const TITLE_TEMPLATES_EN = [
+  'the TRUTH about {x} nobody tells you',
+  'I tried {x} for 30 DAYS and the result SHOCKED me',
+  'the BIGGEST mistake beginners make with {x}',
+  'why EVERYONE is wrong about {x}',
+  '{x}: what nobody teaches you at first',
+  '5 {x} SECRETS that changed everything',
+  'NEVER do THIS with {x}',
+  'how to master {x} from ZERO',
+  'I spent 7 days ONLY on {x}',
+  'this will CHANGE how you see {x}',
+  'the SECRET behind {x} few people know',
+  '{x} in 10 minutes: the ULTIMATE guide',
+  'I did {x} the WRONG way for YEARS',
+  'the {x} trend about to BLOW UP in 2026',
+  'I stopped failing at {x} when I found THIS',
+  '7 things about {x} I WISH I knew sooner',
+  'nobody tells you the REAL truth about {x}',
+  '{x} done RIGHT (most people get it wrong)',
+];
+
+function _capFirst(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+// Gera os títulos de um idioma: curados (geral) + combinações por categoria
+function _buildTitles(curated, topics, tpls) {
+  const out = curated.map(t => ({ t: _capFirst(t), cat: 'geral' }));
+  Object.keys(topics).forEach(cat => {
+    topics[cat].forEach(topic => {
+      tpls.forEach(tpl => out.push({ t: _capFirst(tpl.replace(/\{x\}/g, topic)), cat }));
     });
   });
   return out;
-})();
+}
 
-// Lista plana (usada pelos vídeos vizinhos do preview e pela sugestão)
-const RANDOM_TITLES = TITLES.map(x => x.t);
+const TITLES_PT = _buildTitles(CURATED_GERAL_PT, TITLE_TOPICS_PT, TITLE_TEMPLATES_PT);
+const TITLES_EN = _buildTitles(CURATED_GERAL_EN, TITLE_TOPICS_EN, TITLE_TEMPLATES_EN);
+
+// Idioma ativo dos títulos
+let _titleLang = 'pt';
+function activeTitles() { return _titleLang === 'en' ? TITLES_EN : TITLES_PT; }
+function _catLabel(id) { const c = TITLE_CATS.find(c => c.id === id); return c ? c[_titleLang] : id; }
+function _catEmoji(id) { const c = TITLE_CATS.find(c => c.id === id); return c ? c.emoji : ''; }
 
 const RANDOM_CHANNELS = [
   'Canal do Pedro', 'Tech Brasil', 'Vida Simples', 'Mundo Curioso',
@@ -223,7 +305,8 @@ function _sampleN(arr, n) {
 function buildYtNeighbors() {
   const n       = NEIGHBOR_COUNT;
   const files   = (typeof SAMPLE_FILES !== 'undefined') ? _sampleN(SAMPLE_FILES, n) : [];
-  const titles  = _sampleN(RANDOM_TITLES, Math.min(n, RANDOM_TITLES.length));
+  const pool    = activeTitles().map(x => x.t);
+  const titles  = _sampleN(pool, Math.min(n, pool.length));
   const chans   = _sampleN(RANDOM_CHANNELS, Math.min(n, RANDOM_CHANNELS.length));
   _ytNeighbors = [];
   for (let i = 0; i < n; i++) {
@@ -269,25 +352,45 @@ function _toast(msg) {
   if (typeof toast === 'function') toast(msg);
 }
 
+// ─ Textos da UI por idioma ─────────────────────────────
+const TL_UI = {
+  pt: { all:'Todos', use:'Usar', search:'Buscar título…', hint:'clique 2x para usar', ideas:'ideias', none:'Nenhum título encontrado', suggested:'título sugerido', applied:'✅ Título aplicado' },
+  en: { all:'All',   use:'Use',  search:'Search titles…',  hint:'double-click to use', ideas:'ideas', none:'No titles found',        suggested:'suggested title', applied:'✅ Title applied' },
+};
+function _ui() { return TL_UI[_titleLang]; }
+
 // ─ Sugerir nome de vídeo ──────────────────────────────
-// Se houver um filtro de categoria ativo na lista, respeita ele.
+// Respeita idioma ativo e o filtro de categoria (se houver).
 function suggestVideoName() {
   const inp = document.getElementById('video-title');
   if (!inp) return;
-  const pool = (_tlFilter === 'all') ? TITLES : TITLES.filter(x => x.cat === _tlFilter);
+  const pool = (_tlFilter === 'all') ? activeTitles() : activeTitles().filter(x => x.cat === _tlFilter);
   let item = _rand(pool);
   for (let i = 0; i < 6 && item.t === inp.value; i++) item = _rand(pool);
   inp.value = item.t;
   onTitleInput();
-  _toast(`💡 ${_catEmoji(item.cat)} ${_catLabel(item.cat)}: título sugerido`);
+  _toast(`💡 ${_catEmoji(item.cat)} ${_catLabel(item.cat)}: ${_ui().suggested}`);
 }
 
-// ─ Lista completa de títulos (com filtro por categoria) ─
+// ─ Lista de títulos: idioma + filtro por categoria + busca fuzzy ─
 let _tlFilter = 'all';
+let _tlQuery  = '';
+
+function setTitleLang(lang) {
+  _titleLang = lang;
+  document.querySelectorAll('#tl-lang .tl-lang-btn')
+    .forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  renderTlFilters();
+  renderTlList();
+}
 
 function openTitlesList() {
   const ov = document.getElementById('tl-overlay');
   if (!ov) return;
+  const s = document.getElementById('tl-search');
+  if (s) { s.value = _tlQuery; s.placeholder = _ui().search; }
+  document.querySelectorAll('#tl-lang .tl-lang-btn')
+    .forEach(b => b.classList.toggle('active', b.dataset.lang === _titleLang));
   renderTlFilters();
   renderTlList();
   ov.classList.add('open');
@@ -296,10 +399,11 @@ function openTitlesList() {
 function renderTlFilters() {
   const wrap = document.getElementById('tl-filters');
   if (!wrap) return;
-  let chips = `<button class="tl-chip${_tlFilter === 'all' ? ' active' : ''}" onclick="setTlFilter('all')">Todos <span class="tl-chip-n">${TITLES.length}</span></button>`;
+  const all = activeTitles();
+  let chips = `<button class="tl-chip${_tlFilter === 'all' ? ' active' : ''}" onclick="setTlFilter('all')">${_ui().all} <span class="tl-chip-n">${all.length}</span></button>`;
   chips += TITLE_CATS.map(c => {
-    const n = TITLES.filter(x => x.cat === c.id).length;
-    return `<button class="tl-chip${_tlFilter === c.id ? ' active' : ''}" onclick="setTlFilter('${c.id}')">${c.emoji} ${c.label} <span class="tl-chip-n">${n}</span></button>`;
+    const n = all.filter(x => x.cat === c.id).length;
+    return `<button class="tl-chip${_tlFilter === c.id ? ' active' : ''}" onclick="setTlFilter('${c.id}')">${c.emoji} ${c[_titleLang]} <span class="tl-chip-n">${n}</span></button>`;
   }).join('');
   wrap.innerHTML = chips;
 }
@@ -310,20 +414,37 @@ function setTlFilter(cat) {
   renderTlList();
 }
 
+function onTlSearch(v) {
+  _tlQuery = v;
+  renderTlList();
+}
+
+// Busca fuzzy: ignora acento/caixa; cada palavra precisa aparecer
+// como substring OU subsequência dentro do título.
+function _norm(s) { return s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
+function _subseq(q, t) { let i = 0; for (let k = 0; k < t.length && i < q.length; k++) if (t[k] === q[i]) i++; return i >= q.length; }
+function _fuzzy(query, text) {
+  const q = _norm(query).trim();
+  if (!q) return true;
+  const t = _norm(text);
+  return q.split(/\s+/).every(w => t.includes(w) || _subseq(w, t));
+}
+
 function renderTlList() {
   const list = document.getElementById('tl-list');
   if (!list) return;
-  const items = (_tlFilter === 'all') ? TITLES : TITLES.filter(x => x.cat === _tlFilter);
+  let items = (_tlFilter === 'all') ? activeTitles() : activeTitles().filter(x => x.cat === _tlFilter);
+  if (_tlQuery.trim()) items = items.filter(x => _fuzzy(_tlQuery, x.t));
   const cnt = document.getElementById('tl-count');
   if (cnt) cnt.textContent = items.length;
-  // ondblclick usa o título; o botão "Usar" (clique único) também usa
+  if (!items.length) { list.innerHTML = `<div class="tl-empty">${_ui().none}</div>`; return; }
   list.innerHTML = items.map(x => {
     const t = _esc(x.t);
-    return `<div class="tl-item" title="Clique 2x para usar" data-t="${t}"
+    return `<div class="tl-item" title="${_ui().hint}" data-t="${t}"
         onclick="tlSelect(this)" ondblclick="useTitle(this.dataset.t)">
         <span class="tl-item-txt">${t}</span>
-        ${_tlFilter === 'all' ? `<span class="tl-item-cat">${_catEmoji(x.cat)}</span>` : ''}
-        <button class="tl-item-use" onclick="event.stopPropagation();useTitle(this.parentNode.dataset.t)">Usar</button>
+        ${_tlFilter === 'all' ? `<span class="tl-item-cat" title="${_esc(_catLabel(x.cat))}">${_catEmoji(x.cat)}</span>` : ''}
+        <button class="tl-item-use" onclick="event.stopPropagation();useTitle(this.parentNode.dataset.t)">${_ui().use}</button>
       </div>`;
   }).join('');
 }
@@ -345,7 +466,7 @@ function useTitle(t) {
   const inp = document.getElementById('video-title');
   if (inp) { inp.value = t; onTitleInput(); }
   closeTitlesList();
-  _toast('✅ Título aplicado');
+  _toast(_ui().applied);
 }
 
 // ─ Abrir / fechar prévia ──────────────────────────────

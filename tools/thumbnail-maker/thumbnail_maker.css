@@ -94,9 +94,19 @@ kbd{background:#3f3f46;border-radius:3px;padding:1px 4px;font-size:9px;font-fami
 .tl-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(3px);z-index:9996;display:none;align-items:center;justify-content:center;padding:24px}
 .tl-overlay.open{display:flex}
 .tl-modal{background:#1c1c1f;border:1px solid #3f3f46;border-radius:14px;width:100%;max-width:620px;max-height:82vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.6)}
-.tl-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;border-bottom:1px solid #3f3f46;flex-shrink:0}
-.tl-title{font-size:14px;font-weight:600;color:#fafafa}
+.tl-head{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid #3f3f46;flex-shrink:0}
+.tl-title{font-size:14px;font-weight:600;color:#fafafa;flex:1;min-width:0}
 .tl-sub{font-size:12px;font-weight:400;color:#71717a}
+.tl-lang{display:flex;gap:2px;background:#111114;border:1px solid #3f3f46;border-radius:8px;padding:2px;flex-shrink:0}
+.tl-lang-btn{background:transparent;border:none;color:#a1a1aa;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;padding:5px 10px;border-radius:6px;cursor:pointer;transition:all .12s;white-space:nowrap}
+.tl-lang-btn:hover{color:#fafafa}
+.tl-lang-btn.active{background:#7c3aed;color:#fff}
+.tl-searchbar{display:flex;align-items:center;gap:8px;padding:12px 18px 0}
+.tl-search-ic{font-size:13px;opacity:.6}
+#tl-search{flex:1;background:#18181b;border:1px solid #3f3f46;border-radius:8px;color:#fafafa;padding:8px 12px;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .12s}
+#tl-search:focus{border-color:#7c3aed}
+#tl-search::placeholder{color:#52525b}
+.tl-empty{padding:40px 16px;text-align:center;color:#52525b;font-size:13px}
 .tl-close{background:#27272a;border:1px solid #3f3f46;color:#d4d4d8;width:30px;height:30px;border-radius:7px;cursor:pointer;font-size:19px;display:flex;align-items:center;justify-content:center;transition:all .12s;flex-shrink:0}
 .tl-close:hover{background:#3f3f46;color:#fafafa}
 .tl-filters{display:flex;flex-wrap:wrap;gap:6px;padding:12px 18px;border-bottom:1px solid #3f3f46;flex-shrink:0;max-height:132px;overflow-y:auto}

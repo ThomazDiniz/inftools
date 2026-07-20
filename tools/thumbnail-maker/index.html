@@ -287,8 +287,16 @@
 <div class="tl-overlay" id="tl-overlay" onclick="tlBackdropClick(event)">
   <div class="tl-modal">
     <div class="tl-head">
-      <div class="tl-title">Sugestões de título <span class="tl-sub">(<span id="tl-count">0</span> ideias — clique 2x para usar)</span></div>
+      <div class="tl-title">Sugestões de título <span class="tl-sub">(<span id="tl-count">0</span> — clique 2x para usar)</span></div>
+      <div class="tl-lang" id="tl-lang">
+        <button class="tl-lang-btn active" data-lang="pt" onclick="setTitleLang('pt')">🇧🇷 PT</button>
+        <button class="tl-lang-btn" data-lang="en" onclick="setTitleLang('en')">🇺🇸 EN</button>
+      </div>
       <button class="tl-close" onclick="closeTitlesList()">×</button>
+    </div>
+    <div class="tl-searchbar">
+      <span class="tl-search-ic">🔍</span>
+      <input type="text" id="tl-search" placeholder="Buscar título…" oninput="onTlSearch(this.value)" autocomplete="off">
     </div>
     <div class="tl-filters" id="tl-filters"></div>
     <div class="tl-list" id="tl-list"></div>
