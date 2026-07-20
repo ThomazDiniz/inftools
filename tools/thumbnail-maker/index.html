@@ -231,22 +231,53 @@
 
 </div>
 
-<!-- ╔═ YOUTUBE PREVIEW ═╗ -->
-<div class="yt-overlay" id="yt-overlay" onclick="ytBackdropClick(event)">
-  <div class="yt-modal">
-    <div class="yt-modal-head">
-      <div class="yt-modal-title">Prévia no YouTube</div>
-      <div class="yt-modal-controls">
-        <div class="yt-seg" id="yt-view-seg">
-          <button class="yt-seg-btn active" data-view="home" onclick="setYtView('home')">🏠 Página inicial</button>
-          <button class="yt-seg-btn" data-view="sidebar" onclick="setYtView('sidebar')">📋 Recomendados</button>
-          <button class="yt-seg-btn" data-view="mobile" onclick="setYtView('mobile')">📱 Celular</button>
+<!-- ╔═ YOUTUBE FULL-PAGE PREVIEW ═╗ -->
+<div class="yt-overlay" id="yt-overlay">
+  <div class="yt-app light" id="yt-app">
+
+    <!-- TOPBAR -->
+    <div class="ytx-topbar">
+      <div class="ytx-tb-left">
+        <span class="ytx-ham">☰</span>
+        <span class="ytx-logo"><span class="ytx-play">▶</span> YouTube</span>
+      </div>
+      <div class="ytx-tb-center">
+        <div class="ytx-search">
+          <input type="text" placeholder="Pesquisar" readonly>
+          <button class="ytx-search-btn">🔍</button>
         </div>
-        <button class="yt-theme-btn" id="yt-theme-btn" onclick="toggleYtTheme()" title="Alternar tema">🌙</button>
-        <button class="yt-close" onclick="closeYtPreview()">×</button>
+      </div>
+      <div class="ytx-tb-right">
+        <div class="yt-seg" id="yt-view-seg">
+          <button class="yt-seg-btn active" data-view="home" onclick="setYtView('home')">Página inicial</button>
+          <button class="yt-seg-btn" data-view="watch" onclick="setYtView('watch')">Recomendados</button>
+          <button class="yt-seg-btn" data-view="mobile" onclick="setYtView('mobile')">Celular</button>
+        </div>
+        <button class="yt-ctrl" onclick="shuffleYtNeighbors()" title="Sortear outros vídeos">🔀</button>
+        <button class="yt-ctrl" id="yt-theme-btn" onclick="toggleYtTheme()" title="Fundo claro / escuro">☀️</button>
+        <button class="yt-ctrl" onclick="closeYtPreview()" title="Fechar (Esc)">✕</button>
       </div>
     </div>
-    <div class="yt-modal-body" id="yt-modal-body"></div>
+
+    <!-- BODY -->
+    <div class="yt-app-body">
+      <div class="ytx-sidebar">
+        <div class="ytx-nav active"><span class="ic">🏠</span> Início</div>
+        <div class="ytx-nav"><span class="ic">🎬</span> Shorts</div>
+        <div class="ytx-nav"><span class="ic">📺</span> Inscrições</div>
+        <div class="ytx-sep"></div>
+        <div class="ytx-sec-lbl">Você</div>
+        <div class="ytx-nav"><span class="ic">🕘</span> Histórico</div>
+        <div class="ytx-nav"><span class="ic">▶️</span> Seus vídeos</div>
+        <div class="ytx-nav"><span class="ic">🕒</span> Assistir mais tarde</div>
+        <div class="ytx-nav"><span class="ic">👍</span> Curtidos</div>
+        <div class="ytx-sep"></div>
+        <div class="ytx-sec-lbl">Inscrições</div>
+        <div class="ytx-nav"><span class="ic">🔴</span> Canais que sigo</div>
+      </div>
+      <div class="ytx-main" id="yt-modal-body"></div>
+    </div>
+
   </div>
 </div>
 
