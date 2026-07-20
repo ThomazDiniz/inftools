@@ -7,6 +7,7 @@ let _ytView  = 'home';   // 'home' | 'watch' | 'mobile'
 let _ytLight = true;     // true = fundo branco (padrão), false = escuro
 let _ytThumbUrl  = '';
 let _ytNeighbors = [];   // vídeos aleatórios ao redor do seu
+let _ytPos = { home: 5, watch: 2, mobile: 0 };  // posição (aleatória) do seu vídeo em cada tela
 const NEIGHBOR_COUNT = 15;
 
 // ─ Dados aleatórios para os vídeos vizinhos ───────────
@@ -68,6 +69,12 @@ function buildYtNeighbors() {
       dur:     _rand(RANDOM_DUR),
     });
   }
+  // posição aleatória do SEU vídeo em cada tela
+  _ytPos = {
+    home:   Math.floor(Math.random() * 12),  // 0..11 (12 cards)
+    watch:  Math.floor(Math.random() * 9),   // 0..8  (9 recomendados)
+    mobile: Math.floor(Math.random() * 5),   // 0..4  (5 no feed)
+  };
 }
 
 function shuffleYtNeighbors() {
@@ -192,7 +199,7 @@ function renderYtPreview() {
   if (_ytView === 'home') {
     // seu vídeo misturado entre os outros na página inicial
     const list = N.slice(0, 11);
-    list.splice(5, 0, me);           // insere o seu no meio
+    list.splice(_ytPos.home, 0, me);           // posição aleatória
     const chips = CHIPS.map((c, i) =>
       `<button class="ytx-chip${i === 0 ? ' active' : ''}">${c}</button>`).join('');
     const cards = list.map(_cardHtml).join('');
@@ -202,7 +209,7 @@ function renderYtPreview() {
     // página de vídeo: seu thumbnail aparece na lista de recomendados à direita
     const player = N[0];
     const recos  = N.slice(1, 9);
-    recos.splice(2, 0, me);          // insere o seu na barra de recomendados
+    recos.splice(_ytPos.watch, 0, me);          // posição aleatória na barra de recomendados
     html = `<div class="ytx-watch">
       <div class="ytx-watch-main">
         <div class="ytx-player">${player.thumb ? `<img src="${player.thumb}" alt="">` : '<div class="yt-ghost-fill"></div>'}<div class="ytx-playbtn"></div></div>
@@ -233,7 +240,8 @@ function renderYtPreview() {
     </div>`;
 
   } else { // mobile
-    const list = [me, N[0], N[1], N[2], N[3]];
+    const list = [N[0], N[1], N[2], N[3]];
+    list.splice(_ytPos.mobile, 0, me);          // posição aleatória no feed
     const feed = list.map(v => `<div class="yt-mobile">
         ${_thumbHtml(v.thumb, v.dur)}
         <div class="yt-mobile-foot">
