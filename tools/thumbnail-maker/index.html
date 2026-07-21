@@ -103,7 +103,8 @@
              placeholder="Digite o título do seu vídeo aqui…"
              oninput="onTitleInput()">
       <span class="title-count" id="title-count">0</span>
-      <button class="btn btn-g btn-sm" onclick="suggestVideoName()" title="Sugerir um título aleatório">💡 Sugerir nome</button>
+      <select id="suggest-cat" class="title-cat-sel" title="Categoria da sugestão" onchange="onSuggestCatChange()"></select>
+      <button class="btn btn-g btn-sm" onclick="suggestVideoName()" title="Sugerir um título da categoria escolhida">💡 Sugerir nome</button>
       <button class="btn btn-g btn-sm" onclick="openTitlesList()" title="Ver todos os títulos">📋 Ver lista</button>
       <button class="btn btn-p btn-sm" id="btn-yt-preview" onclick="openYtPreview()" title="Ver como fica no YouTube">▶ Ver no YouTube</button>
     </div>

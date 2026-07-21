@@ -359,12 +359,27 @@ const TL_UI = {
 };
 function _ui() { return TL_UI[_titleLang]; }
 
+// ─ Select de categoria da sugestão ────────────────────
+function buildSuggestCatSelect() {
+  const sel = document.getElementById('suggest-cat');
+  if (!sel) return;
+  const cur = sel.value || 'all';
+  let html = `<option value="all">🏷️ ${_ui().all}</option>`;
+  html += TITLE_CATS.map(c => `<option value="${c.id}">${c.emoji} ${c[_titleLang]}</option>`).join('');
+  sel.innerHTML = html;
+  sel.value = cur;
+}
+
+function onSuggestCatChange() { /* seleção guardada no próprio <select> */ }
+
 // ─ Sugerir nome de vídeo ──────────────────────────────
-// Respeita idioma ativo e o filtro de categoria (se houver).
+// Sorteia só dentro da categoria (tag) escolhida no select, no idioma ativo.
 function suggestVideoName() {
   const inp = document.getElementById('video-title');
   if (!inp) return;
-  const pool = (_tlFilter === 'all') ? activeTitles() : activeTitles().filter(x => x.cat === _tlFilter);
+  const cat  = document.getElementById('suggest-cat')?.value || 'all';
+  const pool = (cat === 'all') ? activeTitles() : activeTitles().filter(x => x.cat === cat);
+  if (!pool.length) return;
   let item = _rand(pool);
   for (let i = 0; i < 6 && item.t === inp.value; i++) item = _rand(pool);
   inp.value = item.t;
@@ -380,6 +395,7 @@ function setTitleLang(lang) {
   _titleLang = lang;
   document.querySelectorAll('#tl-lang .tl-lang-btn')
     .forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  buildSuggestCatSelect();
   renderTlFilters();
   renderTlList();
 }
@@ -637,6 +653,9 @@ function _esc(s) {
   return String(s).replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
+
+// Popula o select de categoria da sugestão ao carregar
+document.addEventListener('DOMContentLoaded', buildSuggestCatSelect);
 
 // Fechar com Escape
 document.addEventListener('keydown', e => {
